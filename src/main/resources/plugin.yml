@@ -1,0 +1,17 @@
+name: TruePlayer
+version: ${version}
+main: me.yourname.trueplayer.TruePlayerPlugin
+api-version: '1.21'
+author: YourName
+description: Basic Carpet-like fake player plugin for Paper/Purpur 1.21.11.
+
+commands:
+  player:
+    description: Control fake players.
+    usage: /player <name> <spawn|kill|tp|look|sneak|unsneak|jump|attack|use> or /player list
+    permission: trueplayer.admin
+
+permissions:
+  trueplayer.admin:
+    description: Allows using fake player commands.
+    default: op

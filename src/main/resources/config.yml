@@ -1,0 +1,5 @@
+fake-player:
+  default-game-mode: survival
+  allow-duplicate-name: false
+  spawn-message: true
+  max-name-length: 16
