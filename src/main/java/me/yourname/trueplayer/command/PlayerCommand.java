@@ -45,7 +45,14 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
                     sender.sendMessage("§c只有玩家可以在当前位置生成假人。");
                     return true;
                 }
-                sender.sendMessage(manager.spawnFakePlayer(fakeName, player.getLocation()) ? "§a已生成假人：§e" + fakeName : "§c生成失败。可能是假人已存在、名称不合法或 NMS 不兼容。");
+                FakePlayerManager.SpawnResult result = manager.spawnFakePlayerResult(fakeName, player.getLocation());
+                switch (result) {
+                    case SUCCESS -> sender.sendMessage("§a已生成假人：§e" + fakeName);
+                    case INVALID_NAME -> sender.sendMessage("§c生成失败：名称不合法。只能使用 1-16 个英文、数字或下划线，例如 Bot1、test_01。");
+                    case INVALID_LOCATION -> sender.sendMessage("§c生成失败：当前位置所在世界无效。");
+                    case ALREADY_EXISTS -> sender.sendMessage("§c生成失败：假人已存在：§e" + fakeName);
+                    case NMS_ERROR -> sender.sendMessage("§c生成失败：NMS 运行时不兼容或构造假人时发生异常，请查看服务器控制台报错。");
+                }
                 return true;
             }
             case "kill" -> {

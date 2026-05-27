@@ -26,26 +26,33 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.UUID;
+import java.util.regex.Pattern;
 
 public final class FakePlayerManager {
 
     private final TruePlayerPlugin plugin;
+    private static final Pattern VALID_PLAYER_NAME = Pattern.compile("^[A-Za-z0-9_]{1,16}$");
+
     private final Map<String, ServerPlayer> fakePlayers = new LinkedHashMap<>();
 
     public FakePlayerManager(TruePlayerPlugin plugin) {
         this.plugin = plugin;
     }
 
-    public boolean spawnFakePlayer(String name, Location location) {
+    public SpawnResult spawnFakePlayerResult(String name, Location location) {
         int maxNameLength = plugin.getConfig().getInt("fake-player.max-name-length", 16);
-        if (name == null || name.isBlank() || name.length() > maxNameLength) return false;
-        if (location.getWorld() == null) return false;
+        if (name == null || name.isBlank()) return SpawnResult.INVALID_NAME;
+        if (name.length() > maxNameLength || name.length() > 16 || !VALID_PLAYER_NAME.matcher(name).matches()) {
+            return SpawnResult.INVALID_NAME;
+        }
+        if (location.getWorld() == null) return SpawnResult.INVALID_LOCATION;
 
-        String key = name.toLowerCase();
+        String key = name.toLowerCase(Locale.ROOT);
         boolean allowDuplicate = plugin.getConfig().getBoolean("fake-player.allow-duplicate-name", false);
-        if (!allowDuplicate && fakePlayers.containsKey(key)) return false;
+        if (!allowDuplicate && fakePlayers.containsKey(key)) return SpawnResult.ALREADY_EXISTS;
 
         try {
             MinecraftServer server = MinecraftServer.getServer();
@@ -72,12 +79,24 @@ public final class FakePlayerManager {
             if (plugin.getConfig().getBoolean("fake-player.spawn-message", true)) {
                 Bukkit.broadcastMessage("§7[§bTruePlayer§7] §a假人 §e" + name + " §a已生成。");
             }
-            return true;
+            return SpawnResult.SUCCESS;
         } catch (Throwable throwable) {
             plugin.getLogger().severe("Failed to spawn fake player: " + throwable.getClass().getName() + ": " + throwable.getMessage());
             throwable.printStackTrace();
-            return false;
+            return SpawnResult.NMS_ERROR;
         }
+    }
+
+    public boolean spawnFakePlayer(String name, Location location) {
+        return spawnFakePlayerResult(name, location) == SpawnResult.SUCCESS;
+    }
+
+    public enum SpawnResult {
+        SUCCESS,
+        INVALID_NAME,
+        INVALID_LOCATION,
+        ALREADY_EXISTS,
+        NMS_ERROR
     }
 
     private void applyDefaultGameMode(ServerPlayer fakePlayer) {
