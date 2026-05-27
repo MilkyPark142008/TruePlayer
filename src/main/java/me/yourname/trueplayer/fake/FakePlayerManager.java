@@ -11,16 +11,19 @@ import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -117,7 +120,10 @@ public final class FakePlayerManager {
         fakePlayer.teleportTo(
                 ((CraftWorld) location.getWorld()).getHandle(),
                 location.getX(), location.getY(), location.getZ(),
-                location.getYaw(), location.getPitch()
+                Collections.<Relative>emptySet(),
+                location.getYaw(), location.getPitch(),
+                false,
+                TeleportCause.PLUGIN
         );
         return true;
     }

@@ -1,11 +1,10 @@
 package me.yourname.trueplayer.fake;
 
 import net.minecraft.network.Connection;
-import net.minecraft.network.PacketSendListener;
+import io.netty.channel.ChannelFutureListener;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.PacketFlow;
 
-import javax.annotation.Nullable;
 
 public final class EmptyConnection extends Connection {
 
@@ -19,12 +18,12 @@ public final class EmptyConnection extends Connection {
     }
 
     @Override
-    public void send(Packet<?> packet, @Nullable PacketSendListener callbacks) {
+    public void send(Packet<?> packet, ChannelFutureListener callbacks) {
         // Fake player has no real client.
     }
 
     @Override
-    public void send(Packet<?> packet, @Nullable PacketSendListener callbacks, boolean flush) {
+    public void send(Packet<?> packet, ChannelFutureListener callbacks, boolean flush) {
         // Fake player has no real client.
     }
 
