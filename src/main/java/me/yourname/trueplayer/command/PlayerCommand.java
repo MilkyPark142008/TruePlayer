@@ -62,6 +62,14 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
                 }
                 return true;
             }
+            case "use" -> {
+                handleAction(sender, fakeName, args, true);
+                return true;
+            }
+            case "attack" -> {
+                handleAction(sender, fakeName, args, false);
+                return true;
+            }
             default -> {
                 sendHelp(sender);
                 return true;
@@ -69,10 +77,39 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+
+    private void handleAction(CommandSender sender, String fakeName, String[] args, boolean useAction) {
+        String actionName = useAction ? "右键" : "左键";
+        if (args.length == 2) {
+            boolean success = useAction ? manager.use(fakeName) : manager.attack(fakeName);
+            sender.sendMessage(success ? "§a假人 §e" + fakeName + " §a已执行一次" + actionName + "。" : "§c执行失败，找不到假人或没有可作用目标：§e" + fakeName);
+            return;
+        }
+        if (args.length != 3) {
+            sender.sendMessage("§c用法：/player " + fakeName + " " + (useAction ? "use" : "attack") + " [ticks]");
+            return;
+        }
+        long intervalTicks;
+        try {
+            intervalTicks = Long.parseLong(args[2]);
+        } catch (NumberFormatException exception) {
+            sender.sendMessage("§c间隔必须是正整数 tick，例如 10 或 20。");
+            return;
+        }
+        if (intervalTicks <= 0) {
+            sender.sendMessage("§c间隔必须大于 0 tick。");
+            return;
+        }
+        boolean success = useAction ? manager.startRepeatingUse(fakeName, intervalTicks) : manager.startRepeatingAttack(fakeName, intervalTicks);
+        sender.sendMessage(success ? "§a假人 §e" + fakeName + " §a已开始每 §e" + intervalTicks + " tick §a执行一次" + actionName + "。" : "§c执行失败，找不到假人：§e" + fakeName);
+    }
+
     private void sendHelp(CommandSender sender) {
         sender.sendMessage("§6TruePlayer 指令帮助：");
         sender.sendMessage("§e/player <name> spawn");
         sender.sendMessage("§e/player <name> kill");
+        sender.sendMessage("§e/player <name> use [ticks] §7- 右键一次，或每 ticks 执行一次");
+        sender.sendMessage("§e/player <name> attack [ticks] §7- 左键一次，或每 ticks 执行一次");
         sender.sendMessage("§e/player <name> chunkinfo §7- 查看假人区块加载调试信息");
     }
 
@@ -102,7 +139,9 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             result.addAll(manager.getFakePlayerNames());
         } else if (args.length == 2) {
-            result.addAll(List.of("spawn", "kill", "chunkinfo"));
+            result.addAll(List.of("spawn", "kill", "chunkinfo", "use", "attack"));
+        } else if (args.length == 3 && (args[1].equalsIgnoreCase("use") || args[1].equalsIgnoreCase("attack"))) {
+            result.addAll(List.of("10", "20"));
         }
         return result;
     }

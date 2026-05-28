@@ -18,6 +18,7 @@ import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.util.RayTraceResult;
+import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 
 import java.nio.charset.StandardCharsets;
@@ -37,6 +38,7 @@ public final class FakePlayerManager {
     private static final Pattern VALID_PLAYER_NAME = Pattern.compile("^[A-Za-z0-9_]{1,16}$");
 
     private final Map<String, ServerPlayer> fakePlayers = new LinkedHashMap<>();
+    private final Map<String, BukkitTask> repeatingActions = new LinkedHashMap<>();
 
     public FakePlayerManager(TruePlayerPlugin plugin) {
         this.plugin = plugin;
@@ -115,7 +117,8 @@ public final class FakePlayerManager {
         if (fakePlayer == null) return false;
 
         try {
-            fakePlayers.remove(name.toLowerCase());
+            cancelRepeatingActions(name);
+            fakePlayers.remove(name.toLowerCase(Locale.ROOT));
             fakePlayer.connection.disconnect(Component.literal("Fake player removed"));
             MinecraftServer.getServer().getPlayerList().remove(fakePlayer);
             fakePlayer.remove(Entity.RemovalReason.DISCARDED);
@@ -130,6 +133,8 @@ public final class FakePlayerManager {
     public void removeAll() {
         Collection<String> names = new ArrayList<>(fakePlayers.keySet());
         for (String name : names) removeFakePlayer(name);
+        repeatingActions.values().forEach(BukkitTask::cancel);
+        repeatingActions.clear();
         fakePlayers.clear();
     }
 
@@ -196,6 +201,52 @@ public final class FakePlayerManager {
         // 基础版先只做挥手动作；完整右键方块/实体后续需要模拟 ServerboundUseItem/UseItemOn 逻辑。
         fakePlayer.swing(InteractionHand.MAIN_HAND);
         return true;
+    }
+
+    public boolean startRepeatingUse(String name, long intervalTicks) {
+        return startRepeatingAction(name, "use", intervalTicks, () -> use(name));
+    }
+
+    public boolean startRepeatingAttack(String name, long intervalTicks) {
+        return startRepeatingAction(name, "attack", intervalTicks, () -> attack(name));
+    }
+
+    private boolean startRepeatingAction(String name, String action, long intervalTicks, Runnable runnable) {
+        if (getFakePlayer(name) == null || intervalTicks <= 0) return false;
+        String taskKey = repeatingActionKey(name, action);
+        BukkitTask previousTask = repeatingActions.remove(taskKey);
+        if (previousTask != null) {
+            previousTask.cancel();
+        }
+        BukkitTask task = Bukkit.getScheduler().runTaskTimer(plugin, () -> {
+            if (getFakePlayer(name) == null) {
+                BukkitTask currentTask = repeatingActions.remove(taskKey);
+                if (currentTask != null) {
+                    currentTask.cancel();
+                }
+                return;
+            }
+            runnable.run();
+        }, 0L, intervalTicks);
+        repeatingActions.put(taskKey, task);
+        return true;
+    }
+
+    private void cancelRepeatingActions(String name) {
+        String normalizedName = name.toLowerCase(Locale.ROOT);
+        List<String> keysToRemove = repeatingActions.keySet().stream()
+                .filter(key -> key.startsWith(normalizedName + ":"))
+                .toList();
+        for (String key : keysToRemove) {
+            BukkitTask task = repeatingActions.remove(key);
+            if (task != null) {
+                task.cancel();
+            }
+        }
+    }
+
+    private String repeatingActionKey(String name, String action) {
+        return name.toLowerCase(Locale.ROOT) + ":" + action.toLowerCase(Locale.ROOT);
     }
 
     public List<String> getChunkInfo(String name) {
