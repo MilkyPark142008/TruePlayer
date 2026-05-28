@@ -20,8 +20,8 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("trueplayer.admin")) {
-            sender.sendMessage("§c你没有权限使用这个指令。");
+        if (!hasCommandAccess(sender)) {
+            sender.sendMessage("§c你没有权限使用这个指令。只有 OP/trueplayer.admin 权限或服务器白名单玩家可以使用。");
             return true;
         }
 
@@ -66,6 +66,12 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+    private boolean hasCommandAccess(CommandSender sender) {
+        if (sender.hasPermission("trueplayer.admin")) return true;
+        if (sender instanceof Player player) return player.isWhitelisted();
+        return true;
+    }
+
     private void sendHelp(CommandSender sender) {
         sender.sendMessage("§6TruePlayer 指令帮助：");
         sender.sendMessage("§e/player <name> spawn");
@@ -76,7 +82,7 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> result = new ArrayList<>();
-        if (!sender.hasPermission("trueplayer.admin")) return result;
+        if (!hasCommandAccess(sender)) return result;
         if (args.length == 1) {
             result.addAll(manager.getFakePlayerNames());
         } else if (args.length == 2) {
