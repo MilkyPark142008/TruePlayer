@@ -28,6 +28,14 @@ jobs:
         with:
           gradle-version: 8.14
 
+      - name: Add swap space for Paperweight
+        run: |
+          sudo fallocate -l 8G /swapfile
+          sudo chmod 600 /swapfile
+          sudo mkswap /swapfile
+          sudo swapon /swapfile
+          free -h
+
       - name: Build with Gradle
         run: gradle build --stacktrace
 
