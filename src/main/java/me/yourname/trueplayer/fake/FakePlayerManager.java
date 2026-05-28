@@ -19,7 +19,11 @@ import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.inventory.ClickType;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
+import org.bukkit.event.player.PlayerItemHeldEvent;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -44,7 +48,7 @@ public final class FakePlayerManager implements Listener {
 
     private final Map<String, ServerPlayer> fakePlayers = new LinkedHashMap<>();
     private final Map<UUID, String> fakePlayerNamesByUuid = new LinkedHashMap<>();
-    private final Map<String, InteractionHand> interactionHands = new LinkedHashMap<>();
+    private final Map<UUID, String> inventoryViewers = new LinkedHashMap<>();
     private final Map<String, BukkitTask> repeatingActions = new LinkedHashMap<>();
 
     public FakePlayerManager(TruePlayerPlugin plugin) {
@@ -86,8 +90,6 @@ public final class FakePlayerManager implements Listener {
 
             fakePlayers.put(key, fakePlayer);
             fakePlayerNamesByUuid.put(fakePlayer.getUUID(), key);
-            interactionHands.put(key, InteractionHand.MAIN_HAND);
-
             if (plugin.getConfig().getBoolean("fake-player.spawn-message", true)) {
                 Bukkit.broadcastMessage("§7[§bTruePlayer§7] §a假人 §e" + name + " §a已生成。");
             }
@@ -131,7 +133,7 @@ public final class FakePlayerManager implements Listener {
             String key = name.toLowerCase(Locale.ROOT);
             fakePlayers.remove(key);
             fakePlayerNamesByUuid.remove(fakePlayer.getUUID());
-            interactionHands.remove(key);
+            inventoryViewers.values().removeIf(key::equals);
             fakePlayer.connection.disconnect(Component.literal("Fake player removed"));
             MinecraftServer.getServer().getPlayerList().remove(fakePlayer);
             fakePlayer.remove(Entity.RemovalReason.DISCARDED);
@@ -150,7 +152,7 @@ public final class FakePlayerManager implements Listener {
         repeatingActions.clear();
         fakePlayers.clear();
         fakePlayerNamesByUuid.clear();
-        interactionHands.clear();
+        inventoryViewers.clear();
     }
 
     public boolean teleportFakePlayer(String name, Location location) {
@@ -214,7 +216,7 @@ public final class FakePlayerManager implements Listener {
         ServerPlayer fakePlayer = getFakePlayer(name);
         if (fakePlayer == null) return false;
         // 基础版先只做挥手动作；完整右键方块/实体后续需要模拟 ServerboundUseItem/UseItemOn 逻辑。
-        fakePlayer.swing(getInteractionHand(name));
+        fakePlayer.swing(InteractionHand.MAIN_HAND);
         return true;
     }
 
@@ -223,16 +225,6 @@ public final class FakePlayerManager implements Listener {
         if (fakePlayer == null || slot < 0 || slot > 8) return false;
         fakePlayer.getBukkitEntity().getInventory().setHeldItemSlot(slot);
         return true;
-    }
-
-    public boolean setInteractionHand(String name, boolean mainHand) {
-        if (getFakePlayer(name) == null) return false;
-        interactionHands.put(name.toLowerCase(Locale.ROOT), mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
-        return true;
-    }
-
-    private InteractionHand getInteractionHand(String name) {
-        return interactionHands.getOrDefault(name.toLowerCase(Locale.ROOT), InteractionHand.MAIN_HAND);
     }
 
     public boolean swapHands(String name) {
@@ -296,7 +288,10 @@ public final class FakePlayerManager implements Listener {
     public boolean openInventory(String name, org.bukkit.entity.Player viewer) {
         ServerPlayer fakePlayer = getFakePlayer(name);
         if (fakePlayer == null || viewer == null) return false;
+        String key = name.toLowerCase(Locale.ROOT);
         viewer.openInventory(fakePlayer.getBukkitEntity().getInventory());
+        inventoryViewers.put(viewer.getUniqueId(), key);
+        viewer.sendMessage("§7提示：打开假人背包期间，可用鼠标滚轮选择假人快捷栏；在背包界面内按数字键 1-9 也会选择假人快捷栏，按 F 交换假人主手/副手。");
         return true;
     }
 
@@ -307,6 +302,56 @@ public final class FakePlayerManager implements Listener {
         if (fakeName == null) return;
         event.setCancelled(true);
         openInventory(fakeName, event.getPlayer());
+    }
+
+    @EventHandler
+    public void onInventoryClose(InventoryCloseEvent event) {
+        inventoryViewers.remove(event.getPlayer().getUniqueId());
+    }
+
+    @EventHandler
+    public void onViewerHeldItemChange(PlayerItemHeldEvent event) {
+        String fakeName = inventoryViewers.get(event.getPlayer().getUniqueId());
+        if (fakeName == null) return;
+        selectHotbarSlot(fakeName, event.getNewSlot());
+    }
+
+    @EventHandler
+    public void onFakeInventoryClick(InventoryClickEvent event) {
+        if (!(event.getWhoClicked() instanceof org.bukkit.entity.Player viewer)) return;
+        String fakeName = inventoryViewers.get(viewer.getUniqueId());
+        if (fakeName == null || getFakePlayer(fakeName) == null) {
+            inventoryViewers.remove(viewer.getUniqueId());
+            return;
+        }
+
+        ClickType click = event.getClick();
+        if (click == ClickType.NUMBER_KEY) {
+            int hotbarButton = event.getHotbarButton();
+            if (hotbarButton >= 0 && hotbarButton <= 8) {
+                event.setCancelled(true);
+                selectHotbarSlot(fakeName, hotbarButton);
+                viewer.sendMessage("§a已选择假人快捷栏槽位 §e" + (hotbarButton + 1) + "§a。");
+            }
+            return;
+        }
+
+        if (click == ClickType.SWAP_OFFHAND || shouldSwapHandsOnDoubleClick(fakeName, event)) {
+            event.setCancelled(true);
+            if (swapHands(fakeName)) {
+                viewer.updateInventory();
+                viewer.sendMessage("§a已交换假人主手和副手物品。");
+            }
+        }
+    }
+
+    private boolean shouldSwapHandsOnDoubleClick(String fakeName, InventoryClickEvent event) {
+        if (event.getClick() != ClickType.DOUBLE_CLICK || !(event.getClickedInventory() instanceof PlayerInventory)) return false;
+        ServerPlayer fakePlayer = getFakePlayer(fakeName);
+        if (fakePlayer == null || !event.getClickedInventory().equals(fakePlayer.getBukkitEntity().getInventory())) return false;
+        int slot = event.getSlot();
+        int selectedSlot = fakePlayer.getBukkitEntity().getInventory().getHeldItemSlot();
+        return slot == selectedSlot || slot == 40;
     }
 
     public List<String> getChunkInfo(String name) {
