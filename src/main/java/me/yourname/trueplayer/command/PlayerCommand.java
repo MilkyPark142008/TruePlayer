@@ -6,21 +6,24 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public final class PlayerCommand implements CommandExecutor, TabCompleter {
 
+    private final JavaPlugin plugin;
     private final FakePlayerManager manager;
 
-    public PlayerCommand(FakePlayerManager manager) {
+    public PlayerCommand(JavaPlugin plugin, FakePlayerManager manager) {
+        this.plugin = plugin;
         this.manager = manager;
     }
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
-        if (!sender.hasPermission("trueplayer.admin")) {
+        if (!hasCommandAccess(sender)) {
             sender.sendMessage("§c你没有权限使用这个指令。");
             return true;
         }
@@ -73,10 +76,29 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§e/player <name> chunkinfo §7- 查看假人区块加载调试信息");
     }
 
+    private boolean hasCommandAccess(CommandSender sender) {
+        if (sender.hasPermission("trueplayer.admin")) {
+            return true;
+        }
+        if (!(sender instanceof Player player)) {
+            return false;
+        }
+
+        List<String> whitelist = plugin.getConfig().getStringList("player-command-whitelist");
+        String playerName = player.getName();
+        String playerUuid = player.getUniqueId().toString();
+        for (String id : whitelist) {
+            if (id.equalsIgnoreCase(playerName) || id.equalsIgnoreCase(playerUuid)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         List<String> result = new ArrayList<>();
-        if (!sender.hasPermission("trueplayer.admin")) return result;
+        if (!hasCommandAccess(sender)) return result;
         if (args.length == 1) {
             result.addAll(manager.getFakePlayerNames());
         } else if (args.length == 2) {

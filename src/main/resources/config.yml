@@ -3,3 +3,8 @@ fake-player:
   allow-duplicate-name: false
   spawn-message: true
   max-name-length: 16
+
+
+# Players listed here can use /player without trueplayer.admin.
+# Supports player names or UUID strings. Names are matched case-insensitively.
+player-command-whitelist: []

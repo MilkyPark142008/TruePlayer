@@ -14,7 +14,7 @@ public final class TruePlayerPlugin extends JavaPlugin {
 
         this.fakePlayerManager = new FakePlayerManager(this);
 
-        PlayerCommand command = new PlayerCommand(fakePlayerManager);
+        PlayerCommand command = new PlayerCommand(this, fakePlayerManager);
         if (getCommand("player") != null) {
             getCommand("player").setExecutor(command);
             getCommand("player").setTabCompleter(command);
