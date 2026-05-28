@@ -53,6 +53,12 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(manager.removeFakePlayer(fakeName) ? "§a已移除假人：§e" + fakeName : "§c找不到假人：§e" + fakeName);
                 return true;
             }
+            case "chunkinfo" -> {
+                for (String line : manager.getChunkInfo(fakeName)) {
+                    sender.sendMessage(line);
+                }
+                return true;
+            }
             default -> {
                 sendHelp(sender);
                 return true;
@@ -64,6 +70,7 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§6TruePlayer 指令帮助：");
         sender.sendMessage("§e/player <name> spawn");
         sender.sendMessage("§e/player <name> kill");
+        sender.sendMessage("§e/player <name> chunkinfo §7- 查看假人区块加载调试信息");
     }
 
     @Override
@@ -73,7 +80,7 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             result.addAll(manager.getFakePlayerNames());
         } else if (args.length == 2) {
-            result.addAll(List.of("spawn", "kill"));
+            result.addAll(List.of("spawn", "kill", "chunkinfo"));
         }
         return result;
     }

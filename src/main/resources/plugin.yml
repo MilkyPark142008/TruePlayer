@@ -8,7 +8,7 @@ description: Basic Carpet-like fake player plugin for Paper/Purpur 1.21.11.
 commands:
   player:
     description: Control fake players.
-    usage: /player <name> <spawn|kill>
+    usage: /player <name> <spawn|kill|chunkinfo>
     permission: trueplayer.admin
 
 permissions:

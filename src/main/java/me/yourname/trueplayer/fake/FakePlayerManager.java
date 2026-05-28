@@ -198,6 +198,52 @@ public final class FakePlayerManager {
         return true;
     }
 
+    public List<String> getChunkInfo(String name) {
+        ServerPlayer fakePlayer = getFakePlayer(name);
+        if (fakePlayer == null) {
+            return List.of("§c找不到假人：§e" + name);
+        }
+
+        org.bukkit.entity.Player bukkitPlayer = fakePlayer.getBukkitEntity();
+        Location location = bukkitPlayer.getLocation();
+        if (location.getWorld() == null) {
+            return List.of("§c假人所在世界无效：§e" + name);
+        }
+
+        int chunkX = location.getBlockX() >> 4;
+        int chunkZ = location.getBlockZ() >> 4;
+        boolean inBukkitOnlinePlayers = Bukkit.getOnlinePlayers().stream()
+                .anyMatch(player -> player.getUniqueId().equals(bukkitPlayer.getUniqueId()));
+        boolean inServerPlayerList = MinecraftServer.getServer().getPlayerList().getPlayers().contains(fakePlayer);
+        boolean currentChunkLoaded = location.getWorld().isChunkLoaded(chunkX, chunkZ);
+
+        int radius = 2;
+        int loaded = 0;
+        int total = 0;
+        for (int x = chunkX - radius; x <= chunkX + radius; x++) {
+            for (int z = chunkZ - radius; z <= chunkZ + radius; z++) {
+                total++;
+                if (location.getWorld().isChunkLoaded(x, z)) {
+                    loaded++;
+                }
+            }
+        }
+
+        List<String> lines = new ArrayList<>();
+        lines.add("§6TruePlayer 区块调试：§e" + fakePlayer.getGameProfile().getName());
+        lines.add("§7世界：§f" + location.getWorld().getName());
+        lines.add(String.format(Locale.ROOT, "§7坐标：§f%.2f %.2f %.2f", location.getX(), location.getY(), location.getZ()));
+        lines.add("§7区块：§f" + chunkX + " " + chunkZ);
+        lines.add("§7Bukkit 在线玩家列表：" + (inBukkitOnlinePlayers ? "§a是" : "§c否"));
+        lines.add("§7Server PlayerList：" + (inServerPlayerList ? "§a是" : "§c否"));
+        lines.add("§7连接对象：" + (fakePlayer.connection != null ? "§a存在" : "§c不存在"));
+        lines.add("§7游戏模式：§f" + bukkitPlayer.getGameMode().name().toLowerCase(Locale.ROOT));
+        lines.add("§7当前区块已加载：" + (currentChunkLoaded ? "§a是" : "§c否"));
+        lines.add("§7周围 " + radius + " 格区块已加载：§f" + loaded + "/" + total);
+        lines.add("§8说明：此命令只读取服务器当前加载状态，不会添加 plugin chunk ticket。");
+        return lines;
+    }
+
     public List<String> getFakePlayerNames() {
         return new ArrayList<>(fakePlayers.keySet());
     }
