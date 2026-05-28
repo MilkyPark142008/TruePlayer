@@ -9,8 +9,9 @@ commands:
   player:
     description: Control fake players.
     usage: /player <name> <spawn|kill|chunkinfo>
+    permission: trueplayer.admin
 
 permissions:
   trueplayer.admin:
-    description: Allows using fake player commands. Whitelisted players are also allowed by the command executor.
+    description: Allows using fake player commands.
     default: op
