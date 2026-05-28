@@ -23,6 +23,8 @@ import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
@@ -42,6 +44,7 @@ public final class FakePlayerManager implements Listener {
 
     private final Map<String, ServerPlayer> fakePlayers = new LinkedHashMap<>();
     private final Map<UUID, String> fakePlayerNamesByUuid = new LinkedHashMap<>();
+    private final Map<String, InteractionHand> interactionHands = new LinkedHashMap<>();
     private final Map<String, BukkitTask> repeatingActions = new LinkedHashMap<>();
 
     public FakePlayerManager(TruePlayerPlugin plugin) {
@@ -83,6 +86,7 @@ public final class FakePlayerManager implements Listener {
 
             fakePlayers.put(key, fakePlayer);
             fakePlayerNamesByUuid.put(fakePlayer.getUUID(), key);
+            interactionHands.put(key, InteractionHand.MAIN_HAND);
 
             if (plugin.getConfig().getBoolean("fake-player.spawn-message", true)) {
                 Bukkit.broadcastMessage("§7[§bTruePlayer§7] §a假人 §e" + name + " §a已生成。");
@@ -124,8 +128,10 @@ public final class FakePlayerManager implements Listener {
 
         try {
             cancelRepeatingActions(name);
-            fakePlayers.remove(name.toLowerCase(Locale.ROOT));
+            String key = name.toLowerCase(Locale.ROOT);
+            fakePlayers.remove(key);
             fakePlayerNamesByUuid.remove(fakePlayer.getUUID());
+            interactionHands.remove(key);
             fakePlayer.connection.disconnect(Component.literal("Fake player removed"));
             MinecraftServer.getServer().getPlayerList().remove(fakePlayer);
             fakePlayer.remove(Entity.RemovalReason.DISCARDED);
@@ -144,6 +150,7 @@ public final class FakePlayerManager implements Listener {
         repeatingActions.clear();
         fakePlayers.clear();
         fakePlayerNamesByUuid.clear();
+        interactionHands.clear();
     }
 
     public boolean teleportFakePlayer(String name, Location location) {
@@ -207,7 +214,35 @@ public final class FakePlayerManager implements Listener {
         ServerPlayer fakePlayer = getFakePlayer(name);
         if (fakePlayer == null) return false;
         // 基础版先只做挥手动作；完整右键方块/实体后续需要模拟 ServerboundUseItem/UseItemOn 逻辑。
-        fakePlayer.swing(InteractionHand.MAIN_HAND);
+        fakePlayer.swing(getInteractionHand(name));
+        return true;
+    }
+
+    public boolean selectHotbarSlot(String name, int slot) {
+        ServerPlayer fakePlayer = getFakePlayer(name);
+        if (fakePlayer == null || slot < 0 || slot > 8) return false;
+        fakePlayer.getBukkitEntity().getInventory().setHeldItemSlot(slot);
+        return true;
+    }
+
+    public boolean setInteractionHand(String name, boolean mainHand) {
+        if (getFakePlayer(name) == null) return false;
+        interactionHands.put(name.toLowerCase(Locale.ROOT), mainHand ? InteractionHand.MAIN_HAND : InteractionHand.OFF_HAND);
+        return true;
+    }
+
+    private InteractionHand getInteractionHand(String name) {
+        return interactionHands.getOrDefault(name.toLowerCase(Locale.ROOT), InteractionHand.MAIN_HAND);
+    }
+
+    public boolean swapHands(String name) {
+        ServerPlayer fakePlayer = getFakePlayer(name);
+        if (fakePlayer == null) return false;
+        PlayerInventory inventory = fakePlayer.getBukkitEntity().getInventory();
+        ItemStack mainHand = inventory.getItemInMainHand();
+        ItemStack offHand = inventory.getItemInOffHand();
+        inventory.setItemInMainHand(offHand);
+        inventory.setItemInOffHand(mainHand);
         return true;
     }
 

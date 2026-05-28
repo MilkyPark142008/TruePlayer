@@ -70,6 +70,18 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(manager.openInventory(fakeName, player) ? "§a已打开假人 §e" + fakeName + " §a的背包。" : "§c找不到假人：§e" + fakeName);
                 return true;
             }
+            case "hotbar", "slot" -> {
+                handleHotbar(sender, fakeName, args);
+                return true;
+            }
+            case "hand" -> {
+                handleHand(sender, fakeName, args);
+                return true;
+            }
+            case "swaphand", "swaphands" -> {
+                sender.sendMessage(manager.swapHands(fakeName) ? "§a假人 §e" + fakeName + " §a已交换主手和副手物品。" : "§c交换失败，找不到假人：§e" + fakeName);
+                return true;
+            }
             case "use" -> {
                 handleAction(sender, fakeName, args, true);
                 return true;
@@ -85,6 +97,48 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         }
     }
 
+
+
+    private void handleHotbar(CommandSender sender, String fakeName, String[] args) {
+        if (args.length != 3) {
+            sender.sendMessage("§c用法：/player " + fakeName + " hotbar <0-8>");
+            return;
+        }
+        int slot;
+        try {
+            slot = Integer.parseInt(args[2]);
+        } catch (NumberFormatException exception) {
+            sender.sendMessage("§c快捷栏槽位必须是 0-8 的整数。");
+            return;
+        }
+        if (slot < 0 || slot > 8) {
+            sender.sendMessage("§c快捷栏槽位必须在 0-8 之间。");
+            return;
+        }
+        sender.sendMessage(manager.selectHotbarSlot(fakeName, slot)
+                ? "§a假人 §e" + fakeName + " §a已选择快捷栏槽位 §e" + slot + "§a。"
+                : "§c设置失败，找不到假人：§e" + fakeName);
+    }
+
+    private void handleHand(CommandSender sender, String fakeName, String[] args) {
+        if (args.length != 3) {
+            sender.sendMessage("§c用法：/player " + fakeName + " hand <main|off>");
+            return;
+        }
+        String hand = args[2].toLowerCase();
+        Boolean mainHand = switch (hand) {
+            case "main", "mainhand", "main_hand", "主手" -> true;
+            case "off", "offhand", "off_hand", "副手" -> false;
+            default -> null;
+        };
+        if (mainHand == null) {
+            sender.sendMessage("§c手部参数只能是 main 或 off。");
+            return;
+        }
+        sender.sendMessage(manager.setInteractionHand(fakeName, mainHand)
+                ? "§a假人 §e" + fakeName + " §a已将右键使用手设置为§e" + (mainHand.booleanValue() ? "主手" : "副手") + "§a。"
+                : "§c设置失败，找不到假人：§e" + fakeName);
+    }
 
     private void handleAction(CommandSender sender, String fakeName, String[] args, boolean useAction) {
         String actionName = useAction ? "右键" : "左键";
@@ -119,6 +173,9 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§e/player <name> use [ticks] §7- 右键一次，或每 ticks 执行一次");
         sender.sendMessage("§e/player <name> attack [ticks] §7- 左键一次，或每 ticks 执行一次");
         sender.sendMessage("§e/player <name> inventory §7- 打开假人背包，也可潜行右键假人打开");
+        sender.sendMessage("§e/player <name> hotbar <0-8> §7- 选择假人主手对应的快捷栏槽位");
+        sender.sendMessage("§e/player <name> hand <main|off> §7- 设置 use 指令使用主手或副手");
+        sender.sendMessage("§e/player <name> swaphands §7- 交换假人主手和副手物品");
         sender.sendMessage("§e/player <name> chunkinfo §7- 查看假人区块加载调试信息");
     }
 
@@ -148,9 +205,13 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             result.addAll(manager.getFakePlayerNames());
         } else if (args.length == 2) {
-            result.addAll(List.of("spawn", "kill", "chunkinfo", "use", "attack", "inventory"));
+            result.addAll(List.of("spawn", "kill", "chunkinfo", "use", "attack", "inventory", "hotbar", "slot", "hand", "swaphands"));
         } else if (args.length == 3 && (args[1].equalsIgnoreCase("use") || args[1].equalsIgnoreCase("attack"))) {
             result.addAll(List.of("10", "20"));
+        } else if (args.length == 3 && (args[1].equalsIgnoreCase("hotbar") || args[1].equalsIgnoreCase("slot"))) {
+            result.addAll(List.of("0", "1", "2", "3", "4", "5", "6", "7", "8"));
+        } else if (args.length == 3 && args[1].equalsIgnoreCase("hand")) {
+            result.addAll(List.of("main", "off"));
         }
         return result;
     }
