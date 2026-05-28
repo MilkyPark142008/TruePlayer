@@ -230,7 +230,7 @@ public final class FakePlayerManager {
         }
 
         List<String> lines = new ArrayList<>();
-        lines.add("§6TruePlayer 区块调试：§e" + fakePlayer.getGameProfile().getName());
+        lines.add("§6TruePlayer 区块调试：§e" + fakePlayer.getName());
         lines.add("§7世界：§f" + location.getWorld().getName());
         lines.add(String.format(Locale.ROOT, "§7坐标：§f%.2f %.2f %.2f", location.getX(), location.getY(), location.getZ()));
         lines.add("§7区块：§f" + chunkX + " " + chunkZ);
