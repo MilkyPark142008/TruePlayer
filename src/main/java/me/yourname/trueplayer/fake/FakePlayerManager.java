@@ -17,9 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -32,10 +29,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import java.util.UUID;
 import java.util.regex.Pattern;
 
-public final class FakePlayerManager implements Listener {
+public final class FakePlayerManager {
 
     private final TruePlayerPlugin plugin;
     private static final Pattern VALID_PLAYER_NAME = Pattern.compile("^[A-Za-z0-9_]{1,16}$");
@@ -45,7 +41,6 @@ public final class FakePlayerManager implements Listener {
 
     public FakePlayerManager(TruePlayerPlugin plugin) {
         this.plugin = plugin;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public SpawnResult spawnFakePlayerResult(String name, Location location) {
@@ -253,21 +248,6 @@ public final class FakePlayerManager implements Listener {
         return name.toLowerCase(Locale.ROOT) + ":" + action.toLowerCase(Locale.ROOT);
     }
 
-    @EventHandler
-    public void onFakePlayerDeath(PlayerDeathEvent event) {
-        String fakeName = getFakePlayerName(event.getEntity().getUniqueId());
-        if (fakeName == null) return;
-        Bukkit.getScheduler().runTask(plugin, () -> removeFakePlayer(fakeName));
-    }
-
-    private String getFakePlayerName(UUID uuid) {
-        for (Map.Entry<String, ServerPlayer> entry : fakePlayers.entrySet()) {
-            if (entry.getValue().getUUID().equals(uuid)) {
-                return entry.getKey();
-            }
-        }
-        return null;
-    }
 
     public List<String> getChunkInfo(String name) {
         ServerPlayer fakePlayer = getFakePlayer(name);
