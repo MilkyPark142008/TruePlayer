@@ -1,6 +1,7 @@
 package me.yourname.trueplayer;
 
 import me.yourname.trueplayer.command.PlayerCommand;
+import me.yourname.trueplayer.command.TruePlayerCommand;
 import me.yourname.trueplayer.fake.FakePlayerManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -18,6 +19,12 @@ public final class TruePlayerPlugin extends JavaPlugin {
         if (getCommand("player") != null) {
             getCommand("player").setExecutor(command);
             getCommand("player").setTabCompleter(command);
+        }
+
+        TruePlayerCommand truePlayerCommand = new TruePlayerCommand(this);
+        if (getCommand("trueplayer") != null) {
+            getCommand("trueplayer").setExecutor(truePlayerCommand);
+            getCommand("trueplayer").setTabCompleter(truePlayerCommand);
         }
 
         getLogger().info("TruePlayer enabled.");

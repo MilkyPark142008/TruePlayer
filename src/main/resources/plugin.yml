@@ -9,6 +9,10 @@ commands:
   player:
     description: Control fake players.
     usage: /player <name> <spawn|kill|chunkinfo>
+  trueplayer:
+    description: Manage TruePlayer plugin settings.
+    usage: /trueplayer whitelist <id> <add|remove>
+    permission: trueplayer.admin
 
 permissions:
   trueplayer.admin:
