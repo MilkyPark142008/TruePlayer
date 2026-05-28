@@ -62,14 +62,6 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
                 }
                 return true;
             }
-            case "inventory", "inv" -> {
-                if (!(sender instanceof Player player)) {
-                    sender.sendMessage("§c只有玩家可以打开假人背包。");
-                    return true;
-                }
-                sender.sendMessage(manager.openInventory(fakeName, player) ? "§a已打开假人 §e" + fakeName + " §a的背包。" : "§c找不到假人：§e" + fakeName);
-                return true;
-            }
             case "use" -> {
                 handleAction(sender, fakeName, args, true);
                 return true;
@@ -118,7 +110,6 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§e/player <name> kill");
         sender.sendMessage("§e/player <name> use [ticks] §7- 右键一次，或每 ticks 执行一次");
         sender.sendMessage("§e/player <name> attack [ticks] §7- 左键一次，或每 ticks 执行一次");
-        sender.sendMessage("§e/player <name> inventory §7- 打开假人背包，也可潜行右键假人打开");
         sender.sendMessage("§e/player <name> chunkinfo §7- 查看假人区块加载调试信息");
     }
 
@@ -148,7 +139,7 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             result.addAll(manager.getFakePlayerNames());
         } else if (args.length == 2) {
-            result.addAll(List.of("spawn", "kill", "chunkinfo", "use", "attack", "inventory", "inv"));
+            result.addAll(List.of("spawn", "kill", "chunkinfo", "use", "attack"));
         } else if (args.length == 3 && (args[1].equalsIgnoreCase("use") || args[1].equalsIgnoreCase("attack"))) {
             result.addAll(List.of("10", "20"));
         }

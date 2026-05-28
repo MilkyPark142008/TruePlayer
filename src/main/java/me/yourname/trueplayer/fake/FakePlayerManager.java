@@ -17,9 +17,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.craftbukkit.entity.CraftEntity;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.util.RayTraceResult;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
@@ -35,18 +32,16 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
-public final class FakePlayerManager implements Listener {
+public final class FakePlayerManager {
 
     private final TruePlayerPlugin plugin;
     private static final Pattern VALID_PLAYER_NAME = Pattern.compile("^[A-Za-z0-9_]{1,16}$");
 
     private final Map<String, ServerPlayer> fakePlayers = new LinkedHashMap<>();
-    private final Map<UUID, String> fakePlayerNamesByUuid = new LinkedHashMap<>();
     private final Map<String, BukkitTask> repeatingActions = new LinkedHashMap<>();
 
     public FakePlayerManager(TruePlayerPlugin plugin) {
         this.plugin = plugin;
-        Bukkit.getPluginManager().registerEvents(this, plugin);
     }
 
     public SpawnResult spawnFakePlayerResult(String name, Location location) {
@@ -82,7 +77,6 @@ public final class FakePlayerManager implements Listener {
             applyDefaultGameMode(fakePlayer);
 
             fakePlayers.put(key, fakePlayer);
-            fakePlayerNamesByUuid.put(fakePlayer.getUUID(), key);
 
             if (plugin.getConfig().getBoolean("fake-player.spawn-message", true)) {
                 Bukkit.broadcastMessage("§7[§bTruePlayer§7] §a假人 §e" + name + " §a已生成。");
@@ -125,7 +119,6 @@ public final class FakePlayerManager implements Listener {
         try {
             cancelRepeatingActions(name);
             fakePlayers.remove(name.toLowerCase(Locale.ROOT));
-            fakePlayerNamesByUuid.remove(fakePlayer.getUUID());
             fakePlayer.connection.disconnect(Component.literal("Fake player removed"));
             MinecraftServer.getServer().getPlayerList().remove(fakePlayer);
             fakePlayer.remove(Entity.RemovalReason.DISCARDED);
@@ -143,7 +136,6 @@ public final class FakePlayerManager implements Listener {
         repeatingActions.values().forEach(BukkitTask::cancel);
         repeatingActions.clear();
         fakePlayers.clear();
-        fakePlayerNamesByUuid.clear();
     }
 
     public boolean teleportFakePlayer(String name, Location location) {
@@ -257,22 +249,6 @@ public final class FakePlayerManager implements Listener {
         return name.toLowerCase(Locale.ROOT) + ":" + action.toLowerCase(Locale.ROOT);
     }
 
-
-    public boolean openInventory(String name, org.bukkit.entity.Player viewer) {
-        ServerPlayer fakePlayer = getFakePlayer(name);
-        if (fakePlayer == null || viewer == null) return false;
-        viewer.openInventory(fakePlayer.getBukkitEntity().getInventory());
-        return true;
-    }
-
-    @EventHandler
-    public void onPlayerInteractFakePlayer(PlayerInteractEntityEvent event) {
-        if (!event.getPlayer().isSneaking()) return;
-        String fakeName = fakePlayerNamesByUuid.get(event.getRightClicked().getUniqueId());
-        if (fakeName == null) return;
-        event.setCancelled(true);
-        openInventory(fakeName, event.getPlayer());
-    }
 
     public List<String> getChunkInfo(String name) {
         ServerPlayer fakePlayer = getFakePlayer(name);
