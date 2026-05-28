@@ -29,7 +29,18 @@ jobs:
           gradle-version: 8.14
 
       - name: Build with Gradle
-        run: gradle build --stacktrace -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8"
+        shell: bash
+        run: |
+          gradle build --stacktrace --info -Dorg.gradle.jvmargs="-Xmx6g -XX:MaxMetaspaceSize=1g -Dfile.encoding=UTF-8" 2>&1 | tee build-output.log
+          exit ${PIPESTATUS[0]}
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-output-log
+          path: build-output.log
+          if-no-files-found: ignore
 
       - name: Upload plugin jar
         uses: actions/upload-artifact@v4
