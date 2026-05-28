@@ -15,8 +15,8 @@ Removing 0 daemon stop events from registry
 Starting a Gradle Daemon (subsequent builds will be faster)
 Starting process 'Gradle build daemon'. Working directory: /home/runner/.gradle/daemon/8.14 Command: /usr/lib/jvm/temurin-21-jdk-amd64/bin/java --add-opens=java.base/java.lang=ALL-UNNAMED --add-opens=java.base/java.lang.invoke=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.api=ALL-UNNAMED --add-exports=jdk.compiler/com.sun.tools.javac.util=ALL-UNNAMED --add-opens=java.base/java.util=ALL-UNNAMED --add-opens=java.prefs/java.util.prefs=ALL-UNNAMED --add-opens=java.base/java.nio.charset=ALL-UNNAMED --add-opens=java.base/java.net=ALL-UNNAMED --add-opens=java.base/java.util.concurrent.atomic=ALL-UNNAMED --add-opens=java.xml/javax.xml.namespace=ALL-UNNAMED -XX:MaxMetaspaceSize=1g -Xmx6g -Dfile.encoding=UTF-8 -Duser.country -Duser.language=en -Duser.variant -cp /home/runner/work/_temp/.gradle-actions/gradle-installations/installs/gradle-8.14/lib/gradle-daemon-main-8.14.jar -javaagent:/home/runner/work/_temp/.gradle-actions/gradle-installations/installs/gradle-8.14/lib/agents/gradle-instrumentation-agent-8.14.jar org.gradle.launcher.daemon.bootstrap.GradleDaemon 8.14
 Successfully started process 'Gradle build daemon'
-An attempt to start the daemon took 1.452 secs.
-The client will now receive all logging from the daemon (pid: 2411). The daemon log file: /home/runner/.gradle/daemon/8.14/daemon-2411.out.log
+An attempt to start the daemon took 1.258 secs.
+The client will now receive all logging from the daemon (pid: 2439). The daemon log file: /home/runner/.gradle/daemon/8.14/daemon-2439.out.log
 Starting build in new daemon [memory: 6 GiB]
 Using 2 worker leases.
 Received JVM installation metadata from '/usr/lib/jvm/temurin-21-jdk-amd64': {JAVA_HOME=/usr/lib/jvm/temurin-21-jdk-amd64, JAVA_VERSION=21.0.11, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=21.0.11+10-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=21.0.11+10-LTS, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
@@ -76,7 +76,7 @@ Caching disabled for Groovy DSL script compilation (cp_proj) because:
 Compiling build file '/home/runner/work/TruePlayer/TruePlayer/build.gradle' using SubsetScriptTransformer.
 Resolved plugin [id: 'java']
 Resolved plugin [id: 'io.papermc.paperweight.userdev', version: '2.0.0-beta.18']
-Downloading https://plugins.gradle.org/m2/io/papermc/paperweight/paperweight-userdev/2.0.0-beta.18/paperweight-userdev-2.0.0-beta.18.jar to /home/runner/.gradle/.tmp/gradle_download9637234612797252884bin
+Downloading https://plugins.gradle.org/m2/io/papermc/paperweight/paperweight-userdev/2.0.0-beta.18/paperweight-userdev-2.0.0-beta.18.jar to /home/runner/.gradle/.tmp/gradle_download14062047481256400228bin
 Caching disabled for InstrumentationAnalysisTransform: /home/runner/.gradle/caches/modules-2/files-2.1/io.papermc.paperweight/paperweight-userdev/2.0.0-beta.18/4ba483973b9ce45eca8ecbb4de1d576ff1d7ca36/paperweight-userdev-2.0.0-beta.18.jar because:
   Build cache is disabled
   Caching not enabled.
@@ -105,33 +105,33 @@ Caching disabled for Groovy DSL script compilation (proj) because:
   Build cache is disabled
   Not worth caching.
 Compiling build file '/home/runner/work/TruePlayer/TruePlayer/build.gradle' using BuildScriptTransformer.
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/paper/dev-bundle/1.21.11-R0.1-SNAPSHOT/dev-bundle-1.21.11-R0.1-20260511.115010-91.zip to /home/runner/.gradle/.tmp/gradle_download11581673484195321145bin
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/mache/1.21.11+build.1/mache-1.21.11+build.1.zip to /home/runner/.gradle/.tmp/gradle_download13220293326901601841bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/paper/dev-bundle/1.21.11-R0.1-SNAPSHOT/dev-bundle-1.21.11-R0.1-20260511.115010-91.zip to /home/runner/.gradle/.tmp/gradle_download8223540968609877304bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/mache/1.21.11+build.1/mache-1.21.11+build.1.zip to /home/runner/.gradle/.tmp/gradle_download8555491709308225100bin
 All projects evaluated.
 Task name matched 'build'
 Selected primary task 'build' from project :
-Starting process 'command '/usr/lib/jvm/temurin-17-jdk-amd64/bin/java''. Working directory: /home/runner/.gradle/.tmp/tmp-jvm14187732929428911950probe Command: /usr/lib/jvm/temurin-17-jdk-amd64/bin/java -Xmx32m -Xms32m -cp . JavaProbe
-Successfully started process 'command '/usr/lib/jvm/temurin-17-jdk-amd64/bin/java''
-Received JVM installation metadata from '/usr/lib/jvm/temurin-17-jdk-amd64': {JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64, JAVA_VERSION=17.0.19, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.19+10, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.19+10, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
-Starting process 'command '/usr/lib/jvm/temurin-8-jdk-amd64/bin/java''. Working directory: /home/runner/.gradle/.tmp/tmp-jvm1982360435908987745probe Command: /usr/lib/jvm/temurin-8-jdk-amd64/bin/java -Xmx32m -Xms32m -cp . JavaProbe
-Successfully started process 'command '/usr/lib/jvm/temurin-8-jdk-amd64/bin/java''
-Received JVM installation metadata from '/usr/lib/jvm/temurin-8-jdk-amd64': {JAVA_HOME=/usr/lib/jvm/temurin-8-jdk-amd64/jre, JAVA_VERSION=1.8.0_492, JAVA_VENDOR=Temurin, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=1.8.0_492-b09, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=25.492-b09, VM_VENDOR=Temurin, OS_ARCH=amd64}
-Starting process 'command '/usr/lib/jvm/temurin-25-jdk-amd64/bin/java''. Working directory: /home/runner/.gradle/.tmp/tmp-jvm12676672191119917234probe Command: /usr/lib/jvm/temurin-25-jdk-amd64/bin/java -Xmx32m -Xms32m -cp . JavaProbe
+Starting process 'command '/usr/lib/jvm/temurin-25-jdk-amd64/bin/java''. Working directory: /home/runner/.gradle/.tmp/tmp-jvm2286079578085442844probe Command: /usr/lib/jvm/temurin-25-jdk-amd64/bin/java -Xmx32m -Xms32m -cp . JavaProbe
 Successfully started process 'command '/usr/lib/jvm/temurin-25-jdk-amd64/bin/java''
 Received JVM installation metadata from '/usr/lib/jvm/temurin-25-jdk-amd64': {JAVA_HOME=/usr/lib/jvm/temurin-25-jdk-amd64, JAVA_VERSION=25.0.3, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=25.0.3+9-LTS, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=25.0.3+9-LTS, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
-Starting process 'command '/usr/lib/jvm/temurin-11-jdk-amd64/bin/java''. Working directory: /home/runner/.gradle/.tmp/tmp-jvm13760449429142258592probe Command: /usr/lib/jvm/temurin-11-jdk-amd64/bin/java -Xmx32m -Xms32m -cp . JavaProbe
+Starting process 'command '/usr/lib/jvm/temurin-17-jdk-amd64/bin/java''. Working directory: /home/runner/.gradle/.tmp/tmp-jvm14635437055740072146probe Command: /usr/lib/jvm/temurin-17-jdk-amd64/bin/java -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command '/usr/lib/jvm/temurin-17-jdk-amd64/bin/java''
+Received JVM installation metadata from '/usr/lib/jvm/temurin-17-jdk-amd64': {JAVA_HOME=/usr/lib/jvm/temurin-17-jdk-amd64, JAVA_VERSION=17.0.19, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=17.0.19+10, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=17.0.19+10, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
+Starting process 'command '/usr/lib/jvm/temurin-11-jdk-amd64/bin/java''. Working directory: /home/runner/.gradle/.tmp/tmp-jvm7706511117539535216probe Command: /usr/lib/jvm/temurin-11-jdk-amd64/bin/java -Xmx32m -Xms32m -cp . JavaProbe
 Successfully started process 'command '/usr/lib/jvm/temurin-11-jdk-amd64/bin/java''
 Received JVM installation metadata from '/usr/lib/jvm/temurin-11-jdk-amd64': {JAVA_HOME=/usr/lib/jvm/temurin-11-jdk-amd64, JAVA_VERSION=11.0.31, JAVA_VENDOR=Eclipse Adoptium, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=11.0.31+11, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=11.0.31+11, VM_VENDOR=Eclipse Adoptium, OS_ARCH=amd64}
+Starting process 'command '/usr/lib/jvm/temurin-8-jdk-amd64/bin/java''. Working directory: /home/runner/.gradle/.tmp/tmp-jvm4388946191078222782probe Command: /usr/lib/jvm/temurin-8-jdk-amd64/bin/java -Xmx32m -Xms32m -cp . JavaProbe
+Successfully started process 'command '/usr/lib/jvm/temurin-8-jdk-amd64/bin/java''
+Received JVM installation metadata from '/usr/lib/jvm/temurin-8-jdk-amd64': {JAVA_HOME=/usr/lib/jvm/temurin-8-jdk-amd64/jre, JAVA_VERSION=1.8.0_492, JAVA_VENDOR=Temurin, RUNTIME_NAME=OpenJDK Runtime Environment, RUNTIME_VERSION=1.8.0_492-b09, VM_NAME=OpenJDK 64-Bit Server VM, VM_VERSION=25.492-b09, VM_VENDOR=Temurin, OS_ARCH=amd64}
 Tasks to be executed: [task ':paperweightUserdevSetup', task ':compileJava', task ':processResources', task ':classes', task ':jar', task ':assemble', task ':compileTestJava', task ':processTestResources', task ':testClasses', task ':test', task ':check', task ':build']
 Tasks that were excluded: []
 Resolve mutations for :paperweightUserdevSetup (Thread[#69,included builds,5,main]) started.
 :paperweightUserdevSetup (Thread[#69,included builds,5,main]) started.
 
 > Task :paperweightUserdevSetup
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/codebook/codebook-cli/1.0.18/codebook-cli-1.0.18-all.jar to /home/runner/.gradle/.tmp/gradle_download18168940832561890066bin
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/parchment/data/parchment/1.21.11-pre3+build.2/parchment-1.21.11-pre3+build.2.zip to /home/runner/.gradle/.tmp/gradle_download13992912471144556547bin
-Downloading https://repo.maven.apache.org/maven2/org/vineflower/vineflower/1.11.2/vineflower-1.11.2.jar to /home/runner/.gradle/.tmp/gradle_download6494511752139370645bin
-Downloading https://repo.maven.apache.org/maven2/net/neoforged/AutoRenamingTool/2.0.5/AutoRenamingTool-2.0.5-all.jar to /home/runner/.gradle/.tmp/gradle_download9963242254737820798bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/codebook/codebook-cli/1.0.18/codebook-cli-1.0.18-all.jar to /home/runner/.gradle/.tmp/gradle_download13082820403978450817bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/parchment/data/parchment/1.21.11-pre3+build.2/parchment-1.21.11-pre3+build.2.zip to /home/runner/.gradle/.tmp/gradle_download11087607155428147813bin
+Downloading https://repo.maven.apache.org/maven2/org/vineflower/vineflower/1.11.2/vineflower-1.11.2.jar to /home/runner/.gradle/.tmp/gradle_download15916576111854923130bin
+Downloading https://repo.maven.apache.org/maven2/net/neoforged/AutoRenamingTool/2.0.5/AutoRenamingTool-2.0.5-all.jar to /home/runner/.gradle/.tmp/gradle_download2448946981095199054bin
 Caching disabled for task ':paperweightUserdevSetup' because:
   Build cache is disabled
   Caching has not been enabled for the task
@@ -142,123 +142,123 @@ applyPaperclipPatch
 Graph building for [FileOutputValue(name='output.jar', owner='applyPaperclipPatch')] took 1ms
 Input hash for applyPaperclipPatch: c9a53f01acfb65c4a1dc2a7800c5c82b06fd8bca489383ff45ca9abd7808383a
 Skipping applyPaperclipPatch (up-to-date)
-Up-to-date check for applyPaperclipPatch took 39ms (up-to-date)
-Execution of [FileOutputValue(name='output.jar', owner='applyPaperclipPatch')] took 39ms
-Completed setup in 425ms
-Copied artifacts to project cache in 32ms
+Up-to-date check for applyPaperclipPatch took 43ms (up-to-date)
+Execution of [FileOutputValue(name='output.jar', owner='applyPaperclipPatch')] took 43ms
+Completed setup in 421ms
+Copied artifacts to project cache in 36ms
 Resolve mutations for :compileJava (Thread[#69,included builds,5,main]) started.
 :compileJava (Thread[#69,included builds,5,main]) started.
 
 > Task :compileJava
-Downloading https://repo.papermc.io/repository/maven-public/ca/spottedleaf/concurrentutil/0.0.8/concurrentutil-0.0.8.jar to /home/runner/.gradle/.tmp/gradle_download5446592022180357524bin
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/1.21.11-R0.1-SNAPSHOT/paper-api-1.21.11-R0.1-20260511.115010-91.jar to /home/runner/.gradle/.tmp/gradle_download5989896656470923930bin
-Downloading https://repo.maven.apache.org/maven2/org/jline/jline-terminal-ffm/3.27.1/jline-terminal-ffm-3.27.1.jar to /home/runner/.gradle/.tmp/gradle_download5451579280984454824bin
-Downloading https://repo.maven.apache.org/maven2/net/minecrell/terminalconsoleappender/1.3.0/terminalconsoleappender-1.3.0.jar to /home/runner/.gradle/.tmp/gradle_download15432563059785467604bin
-Downloading https://repo.maven.apache.org/maven2/org/jline/jline-terminal-jni/3.27.1/jline-terminal-jni-3.27.1.jar to /home/runner/.gradle/.tmp/gradle_download7784211041284392334bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-logger-slf4j/4.26.1/adventure-text-logger-slf4j-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download2156627347093268677bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-minimessage/4.26.1/adventure-text-minimessage-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download8055286998273482408bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-legacy/4.26.1/adventure-text-serializer-legacy-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download5270073902773694345bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-plain/4.26.1/adventure-text-serializer-plain-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download10470647486735901743bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-gson/4.26.1/adventure-text-serializer-gson-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download17655226613225068765bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-json/4.26.1/adventure-text-serializer-json-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download10954085629058648287bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-api/4.26.1/adventure-api-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download14940782536925721287bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-key/4.26.1/adventure-key-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download14848699813579346742bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-ansi/4.26.1/adventure-text-serializer-ansi-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download17525718932398589540bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.25.2/log4j-core-2.25.2.jar to /home/runner/.gradle/.tmp/gradle_download9367083282544615967bin
-Downloading https://repo.papermc.io/repository/maven-public/com/velocitypowered/velocity-native/3.4.0-SNAPSHOT/velocity-native-3.4.0-20260121.190037-118.jar to /home/runner/.gradle/.tmp/gradle_download636959060366730199bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-codec-haproxy/4.2.7.Final/netty-codec-haproxy-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download17581460397586090740bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-iostreams/2.24.1/log4j-iostreams-2.24.1.jar to /home/runner/.gradle/.tmp/gradle_download4530194396658716403bin
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/reflection-rewriter/0.0.3/reflection-rewriter-0.0.3.jar to /home/runner/.gradle/.tmp/gradle_download18325042147123647340bin
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/reflection-rewriter-proxy-generator/0.0.3/reflection-rewriter-proxy-generator-0.0.3.jar to /home/runner/.gradle/.tmp/gradle_download1827510617246697938bin
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/asm-utils/0.0.3/asm-utils-0.0.3.jar to /home/runner/.gradle/.tmp/gradle_download4073461861240739016bin
-Downloading https://repo.maven.apache.org/maven2/org/ow2/asm/asm-commons/9.9.1/asm-commons-9.9.1.jar to /home/runner/.gradle/.tmp/gradle_download16218342757695798873bin
-Downloading https://repo.maven.apache.org/maven2/org/spongepowered/configurate-yaml/4.2.0/configurate-yaml-4.2.0.jar to /home/runner/.gradle/.tmp/gradle_download2492823163188015367bin
-Downloading https://repo.maven.apache.org/maven2/net/neoforged/AutoRenamingTool/2.0.3/AutoRenamingTool-2.0.3.jar to /home/runner/.gradle/.tmp/gradle_download1495715713339347503bin
-Downloading https://repo.maven.apache.org/maven2/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar to /home/runner/.gradle/.tmp/gradle_download13912157215895909866bin
-Downloading https://repo.papermc.io/repository/maven-public/io/papermc/reflection-rewriter-runtime/0.0.3/reflection-rewriter-runtime-0.0.3.jar to /home/runner/.gradle/.tmp/gradle_download2096048516335803195bin
-Downloading https://repo.maven.apache.org/maven2/net/neoforged/srgutils/1.0.9/srgutils-1.0.9.jar to /home/runner/.gradle/.tmp/gradle_download18242389178138611208bin
-Downloading https://repo.papermc.io/repository/maven-public/me/lucko/spark-api/0.1-SNAPSHOT/spark-api-0.1-20240720.200737-2.jar to /home/runner/.gradle/.tmp/gradle_download6861223319027727899bin
-Downloading https://repo.papermc.io/repository/maven-public/me/lucko/spark-paper/1.10.152/spark-paper-1.10.152.jar to /home/runner/.gradle/.tmp/gradle_download5218083216899106378bin
-Downloading https://repo.maven.apache.org/maven2/com/google/guava/guava/33.5.0-jre/guava-33.5.0-jre.jar to /home/runner/.gradle/.tmp/gradle_download13199130080914112716bin
-Downloading https://repo.papermc.io/repository/maven-public/net/md-5/bungeecord-chat/1.21-R0.2-deprecated+build.21/bungeecord-chat-1.21-R0.2-deprecated+build.21.jar to /home/runner/.gradle/.tmp/gradle_download13387393372808207628bin
-Downloading https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar to /home/runner/.gradle/.tmp/gradle_download430652200870791170bin
-Downloading https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar to /home/runner/.gradle/.tmp/gradle_download4918683336299164510bin
-Downloading https://repo.maven.apache.org/maven2/org/joml/joml/1.10.8/joml-1.10.8.jar to /home/runner/.gradle/.tmp/gradle_download9174186881968277102bin
-Downloading https://repo.maven.apache.org/maven2/it/unimi/dsi/fastutil/8.5.18/fastutil-8.5.18.jar to /home/runner/.gradle/.tmp/gradle_download1701884069288190356bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.25.2/log4j-api-2.25.2.jar to /home/runner/.gradle/.tmp/gradle_download14051147669580578313bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-resolver-provider/3.9.6/maven-resolver-provider-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download18330017792657706122bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-impl/1.9.18/maven-resolver-impl-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download16270738493881516422bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-named-locks/1.9.18/maven-resolver-named-locks-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download15462592433052569828bin
-Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar to /home/runner/.gradle/.tmp/gradle_download12642196504174532619bin
-Downloading https://repo.papermc.io/repository/maven-public/com/mojang/brigadier/1.3.10/brigadier-1.3.10.jar to /home/runner/.gradle/.tmp/gradle_download8336448570251016571bin
-Downloading https://repo.maven.apache.org/maven2/org/spongepowered/configurate-core/4.2.0/configurate-core-4.2.0.jar to /home/runner/.gradle/.tmp/gradle_download15249717078861887553bin
-Downloading https://repo.maven.apache.org/maven2/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar to /home/runner/.gradle/.tmp/gradle_download3800573959922357710bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/option/1.1.0/option-1.1.0.jar to /home/runner/.gradle/.tmp/gradle_download5862985931688661219bin
-Downloading https://repo.maven.apache.org/maven2/org/checkerframework/checker-qual/3.49.2/checker-qual-3.49.2.jar to /home/runner/.gradle/.tmp/gradle_download17530362828064744075bin
-Downloading https://repo.maven.apache.org/maven2/org/jline/jline-reader/3.20.0/jline-reader-3.20.0.jar to /home/runner/.gradle/.tmp/gradle_download432792497038791876bin
-Downloading https://repo.maven.apache.org/maven2/org/jline/jline-terminal/3.27.1/jline-terminal-3.27.1.jar to /home/runner/.gradle/.tmp/gradle_download13098180420762208604bin
-Downloading https://repo.maven.apache.org/maven2/org/jline/jline-native/3.27.1/jline-native-3.27.1.jar to /home/runner/.gradle/.tmp/gradle_download14342781967902752464bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-codec-base/4.2.7.Final/netty-codec-base-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download13514504608226513938bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport/4.2.7.Final/netty-transport-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download11357233713942485644bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-buffer/4.2.7.Final/netty-buffer-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download12880703500468303123bin
-Downloading https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar to /home/runner/.gradle/.tmp/gradle_download7722085064402775968bin
-Downloading https://repo.maven.apache.org/maven2/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar to /home/runner/.gradle/.tmp/gradle_download5590537579423323904bin
-Downloading https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.41.0/error_prone_annotations-2.41.0.jar to /home/runner/.gradle/.tmp/gradle_download13352151666905179204bin
-Downloading https://repo.maven.apache.org/maven2/net/neoforged/installertools/cli-utils/2.1.4/cli-utils-2.1.4.jar to /home/runner/.gradle/.tmp/gradle_download10537196617772102957bin
-Downloading https://repo.maven.apache.org/maven2/at/yawk/lz4/lz4-java/1.8.1/lz4-java-1.8.1.jar to /home/runner/.gradle/.tmp/gradle_download11301165318533614966bin
-Downloading https://repo.maven.apache.org/maven2/com/azure/azure-json/1.4.0/azure-json-1.4.0.jar to /home/runner/.gradle/.tmp/gradle_download3359796330074034371bin
-Downloading https://repo.maven.apache.org/maven2/com/github/oshi/oshi-core/6.9.0/oshi-core-6.9.0.jar to /home/runner/.gradle/.tmp/gradle_download8413134430084723271bin
-Downloading https://repo.maven.apache.org/maven2/com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar to /home/runner/.gradle/.tmp/gradle_download1963582674560093037bin
-Downloading https://repo.papermc.io/repository/maven-public/com/mojang/authlib/7.0.61/authlib-7.0.61.jar to /home/runner/.gradle/.tmp/gradle_download5646762265721968222bin
-Downloading https://repo.maven.apache.org/maven2/com/microsoft/azure/msal4j/1.23.1/msal4j-1.23.1.jar to /home/runner/.gradle/.tmp/gradle_download8392204712310285865bin
-Downloading https://repo.papermc.io/repository/maven-public/com/mojang/datafixerupper/9.0.19/datafixerupper-9.0.19.jar to /home/runner/.gradle/.tmp/gradle_download18143441202190172533bin
-Downloading https://repo.papermc.io/repository/maven-public/com/mojang/jtracy/1.0.37/jtracy-1.0.37.jar to /home/runner/.gradle/.tmp/gradle_download10528597752570342586bin
-Downloading https://repo.papermc.io/repository/maven-public/com/mojang/logging/1.6.11/logging-1.6.11.jar to /home/runner/.gradle/.tmp/gradle_download16098367476038183383bin
-Downloading https://repo.maven.apache.org/maven2/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar to /home/runner/.gradle/.tmp/gradle_download4987461256979386767bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-codec-compression/4.2.7.Final/netty-codec-compression-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download17606080680049416910bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-codec-http/4.2.7.Final/netty-codec-http-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download9317771774371353529bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-resolver/4.2.7.Final/netty-resolver-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download9681482093942083320bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-common/4.2.7.Final/netty-common-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download12474329550332595975bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-handler/4.2.7.Final/netty-handler-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download2132337319046648396bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-classes-epoll/4.2.7.Final/netty-transport-classes-epoll-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download16593137162831786755bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-classes-kqueue/4.2.7.Final/netty-transport-classes-kqueue-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download10193576409761427865bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-epoll/4.2.7.Final/netty-transport-native-epoll-4.2.7.Final-linux-x86_64.jar to /home/runner/.gradle/.tmp/gradle_download7373464983660806488bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-epoll/4.2.7.Final/netty-transport-native-epoll-4.2.7.Final-linux-aarch_64.jar to /home/runner/.gradle/.tmp/gradle_download6329415023802100092bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-kqueue/4.2.7.Final/netty-transport-native-kqueue-4.2.7.Final-osx-x86_64.jar to /home/runner/.gradle/.tmp/gradle_download10527877940065829779bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-kqueue/4.2.7.Final/netty-transport-native-kqueue-4.2.7.Final-osx-aarch_64.jar to /home/runner/.gradle/.tmp/gradle_download506174448185473195bin
-Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-unix-common/4.2.7.Final/netty-transport-native-unix-common-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download15997744001670177914bin
-Downloading https://repo.maven.apache.org/maven2/net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar to /home/runner/.gradle/.tmp/gradle_download6043527610317241411bin
-Downloading https://repo.maven.apache.org/maven2/net/java/dev/jna/jna-platform/5.17.0/jna-platform-5.17.0.jar to /home/runner/.gradle/.tmp/gradle_download14522271801714932386bin
-Downloading https://repo.maven.apache.org/maven2/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar to /home/runner/.gradle/.tmp/gradle_download14913164234209208579bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-model-builder/3.9.6/maven-model-builder-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download16700014711203487968bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-artifact/3.9.6/maven-artifact-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download971616624768626708bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.19.0/commons-lang3-3.19.0.jar to /home/runner/.gradle/.tmp/gradle_download2933972744689134739bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-slf4j2-impl/2.25.2/log4j-slf4j2-impl-2.25.2.jar to /home/runner/.gradle/.tmp/gradle_download17164297960985178855bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/examination-api/1.3.0/examination-api-1.3.0.jar to /home/runner/.gradle/.tmp/gradle_download16696933845062639584bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/examination-string/1.3.0/examination-string-1.3.0.jar to /home/runner/.gradle/.tmp/gradle_download18158942559517567922bin
-Downloading https://repo.maven.apache.org/maven2/org/jetbrains/annotations/26.0.2-1/annotations-26.0.2-1.jar to /home/runner/.gradle/.tmp/gradle_download6265984735689490099bin
-Downloading https://repo.maven.apache.org/maven2/net/kyori/ansi/1.1.1/ansi-1.1.1.jar to /home/runner/.gradle/.tmp/gradle_download16779263472189503948bin
-Downloading https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar to /home/runner/.gradle/.tmp/gradle_download17808320013382828671bin
-Downloading https://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs-annotations/4.8.6/spotbugs-annotations-4.8.6.jar to /home/runner/.gradle/.tmp/gradle_download13904309328723679784bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/3.9.6/maven-model-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download10065838808500791114bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-repository-metadata/3.9.6/maven-repository-metadata-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download16503967863020606826bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-spi/1.9.18/maven-resolver-spi-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download4237237057577341977bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-util/1.9.18/maven-resolver-util-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download12339263660332944116bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-api/1.9.18/maven-resolver-api-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download16882810844863918594bin
-Downloading https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar to /home/runner/.gradle/.tmp/gradle_download9879412105235895459bin
-Downloading https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar to /home/runner/.gradle/.tmp/gradle_download9290600206512073255bin
-Downloading https://repo.maven.apache.org/maven2/io/leangen/geantyref/geantyref/1.3.16/geantyref-1.3.16.jar to /home/runner/.gradle/.tmp/gradle_download3243508443236753500bin
-Downloading https://repo.maven.apache.org/maven2/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar to /home/runner/.gradle/.tmp/gradle_download15598711075538224802bin
-Downloading https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/3.1/j2objc-annotations-3.1.jar to /home/runner/.gradle/.tmp/gradle_download15221407523276654027bin
-Downloading https://repo.maven.apache.org/maven2/org/osgi/org.osgi.annotation.bundle/2.0.0/org.osgi.annotation.bundle-2.0.0.jar to /home/runner/.gradle/.tmp/gradle_download1310080254362739192bin
-Downloading https://repo.maven.apache.org/maven2/biz/aQute/bnd/biz.aQute.bnd.annotation/7.1.0/biz.aQute.bnd.annotation-7.1.0.jar to /home/runner/.gradle/.tmp/gradle_download1890577177264786756bin
-Downloading https://repo.maven.apache.org/maven2/org/osgi/org.osgi.annotation.versioning/1.1.2/org.osgi.annotation.versioning-1.1.2.jar to /home/runner/.gradle/.tmp/gradle_download10172754931285617362bin
-Downloading https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-interpolation/1.26/plexus-interpolation-1.26.jar to /home/runner/.gradle/.tmp/gradle_download12028555263882100270bin
-Downloading https://repo.maven.apache.org/maven2/com/google/auto/service/auto-service-annotations/1.1.1/auto-service-annotations-1.1.1.jar to /home/runner/.gradle/.tmp/gradle_download4558439859055592284bin
-Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-builder-support/3.9.6/maven-builder-support-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download9580199046666089454bin
-Downloading https://repo.maven.apache.org/maven2/org/eclipse/sisu/org.eclipse.sisu.inject/0.9.0.M2/org.eclipse.sisu.inject-0.9.0.M2.jar to /home/runner/.gradle/.tmp/gradle_download15498952332840009025bin
-Downloading https://repo.maven.apache.org/maven2/org/osgi/org.osgi.resource/1.0.0/org.osgi.resource-1.0.0.jar to /home/runner/.gradle/.tmp/gradle_download14906494036906864971bin
-Downloading https://repo.maven.apache.org/maven2/org/osgi/org.osgi.service.serviceloader/1.0.0/org.osgi.service.serviceloader-1.0.0.jar to /home/runner/.gradle/.tmp/gradle_download15452089757936269575bin
+Downloading https://repo.papermc.io/repository/maven-public/ca/spottedleaf/concurrentutil/0.0.8/concurrentutil-0.0.8.jar to /home/runner/.gradle/.tmp/gradle_download8964261180773482591bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/paper/paper-api/1.21.11-R0.1-SNAPSHOT/paper-api-1.21.11-R0.1-20260511.115010-91.jar to /home/runner/.gradle/.tmp/gradle_download16526680113167286070bin
+Downloading https://repo.maven.apache.org/maven2/org/jline/jline-terminal-ffm/3.27.1/jline-terminal-ffm-3.27.1.jar to /home/runner/.gradle/.tmp/gradle_download15997001569232459298bin
+Downloading https://repo.maven.apache.org/maven2/org/jline/jline-terminal-jni/3.27.1/jline-terminal-jni-3.27.1.jar to /home/runner/.gradle/.tmp/gradle_download6110922480753683940bin
+Downloading https://repo.maven.apache.org/maven2/net/minecrell/terminalconsoleappender/1.3.0/terminalconsoleappender-1.3.0.jar to /home/runner/.gradle/.tmp/gradle_download3242467697275733751bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-minimessage/4.26.1/adventure-text-minimessage-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download5228905578813288818bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-logger-slf4j/4.26.1/adventure-text-logger-slf4j-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download12527976018201888840bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-legacy/4.26.1/adventure-text-serializer-legacy-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download3789033560975309021bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-gson/4.26.1/adventure-text-serializer-gson-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download16752356963014528522bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-json/4.26.1/adventure-text-serializer-json-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download3840689499518719215bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-plain/4.26.1/adventure-text-serializer-plain-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download16146384066515695603bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-key/4.26.1/adventure-key-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download15680150936671810787bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-text-serializer-ansi/4.26.1/adventure-text-serializer-ansi-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download8934343053753092179bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/adventure-api/4.26.1/adventure-api-4.26.1.jar to /home/runner/.gradle/.tmp/gradle_download6944695840340102416bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-core/2.25.2/log4j-core-2.25.2.jar to /home/runner/.gradle/.tmp/gradle_download7751749585800342320bin
+Downloading https://repo.papermc.io/repository/maven-public/com/velocitypowered/velocity-native/3.4.0-SNAPSHOT/velocity-native-3.4.0-20260121.190037-118.jar to /home/runner/.gradle/.tmp/gradle_download7295657088516664635bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-codec-haproxy/4.2.7.Final/netty-codec-haproxy-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download2723090845655868748bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-iostreams/2.24.1/log4j-iostreams-2.24.1.jar to /home/runner/.gradle/.tmp/gradle_download16700635246152487140bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/reflection-rewriter/0.0.3/reflection-rewriter-0.0.3.jar to /home/runner/.gradle/.tmp/gradle_download9927424081302469505bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/reflection-rewriter-proxy-generator/0.0.3/reflection-rewriter-proxy-generator-0.0.3.jar to /home/runner/.gradle/.tmp/gradle_download7215603945649110924bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/asm-utils/0.0.3/asm-utils-0.0.3.jar to /home/runner/.gradle/.tmp/gradle_download361708528504871575bin
+Downloading https://repo.maven.apache.org/maven2/org/ow2/asm/asm-commons/9.9.1/asm-commons-9.9.1.jar to /home/runner/.gradle/.tmp/gradle_download9358768768925529277bin
+Downloading https://repo.maven.apache.org/maven2/com/googlecode/json-simple/json-simple/1.1.1/json-simple-1.1.1.jar to /home/runner/.gradle/.tmp/gradle_download1876612326019188020bin
+Downloading https://repo.maven.apache.org/maven2/org/spongepowered/configurate-yaml/4.2.0/configurate-yaml-4.2.0.jar to /home/runner/.gradle/.tmp/gradle_download10939170955310264434bin
+Downloading https://repo.maven.apache.org/maven2/net/neoforged/AutoRenamingTool/2.0.3/AutoRenamingTool-2.0.3.jar to /home/runner/.gradle/.tmp/gradle_download8307805781836114963bin
+Downloading https://repo.maven.apache.org/maven2/net/neoforged/srgutils/1.0.9/srgutils-1.0.9.jar to /home/runner/.gradle/.tmp/gradle_download14109390060504898699bin
+Downloading https://repo.papermc.io/repository/maven-public/io/papermc/reflection-rewriter-runtime/0.0.3/reflection-rewriter-runtime-0.0.3.jar to /home/runner/.gradle/.tmp/gradle_download10802412987118267865bin
+Downloading https://repo.papermc.io/repository/maven-public/me/lucko/spark-api/0.1-SNAPSHOT/spark-api-0.1-20240720.200737-2.jar to /home/runner/.gradle/.tmp/gradle_download17550953836581907461bin
+Downloading https://repo.papermc.io/repository/maven-public/me/lucko/spark-paper/1.10.152/spark-paper-1.10.152.jar to /home/runner/.gradle/.tmp/gradle_download16653358056950243091bin
+Downloading https://repo.maven.apache.org/maven2/com/google/guava/guava/33.5.0-jre/guava-33.5.0-jre.jar to /home/runner/.gradle/.tmp/gradle_download3039334025531057959bin
+Downloading https://repo.papermc.io/repository/maven-public/net/md-5/bungeecord-chat/1.21-R0.2-deprecated+build.21/bungeecord-chat-1.21-R0.2-deprecated+build.21.jar to /home/runner/.gradle/.tmp/gradle_download8599952119145832791bin
+Downloading https://repo.maven.apache.org/maven2/com/google/code/gson/gson/2.13.2/gson-2.13.2.jar to /home/runner/.gradle/.tmp/gradle_download1119551454084607419bin
+Downloading https://repo.maven.apache.org/maven2/org/yaml/snakeyaml/2.2/snakeyaml-2.2.jar to /home/runner/.gradle/.tmp/gradle_download18322206885034418619bin
+Downloading https://repo.maven.apache.org/maven2/org/joml/joml/1.10.8/joml-1.10.8.jar to /home/runner/.gradle/.tmp/gradle_download16904627257320942279bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-api/2.25.2/log4j-api-2.25.2.jar to /home/runner/.gradle/.tmp/gradle_download12686207128519131152bin
+Downloading https://repo.maven.apache.org/maven2/it/unimi/dsi/fastutil/8.5.18/fastutil-8.5.18.jar to /home/runner/.gradle/.tmp/gradle_download2106412210947178972bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-resolver-provider/3.9.6/maven-resolver-provider-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download3447417686241874216bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-impl/1.9.18/maven-resolver-impl-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download13663723311486606742bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-named-locks/1.9.18/maven-resolver-named-locks-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download7170624453618082885bin
+Downloading https://repo.maven.apache.org/maven2/org/slf4j/slf4j-api/2.0.17/slf4j-api-2.0.17.jar to /home/runner/.gradle/.tmp/gradle_download8906581944616353538bin
+Downloading https://repo.papermc.io/repository/maven-public/com/mojang/brigadier/1.3.10/brigadier-1.3.10.jar to /home/runner/.gradle/.tmp/gradle_download13611686712229287952bin
+Downloading https://repo.maven.apache.org/maven2/org/spongepowered/configurate-core/4.2.0/configurate-core-4.2.0.jar to /home/runner/.gradle/.tmp/gradle_download5176795011231923535bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/option/1.1.0/option-1.1.0.jar to /home/runner/.gradle/.tmp/gradle_download2071871055672848662bin
+Downloading https://repo.maven.apache.org/maven2/org/jspecify/jspecify/1.0.0/jspecify-1.0.0.jar to /home/runner/.gradle/.tmp/gradle_download15178289699515061011bin
+Downloading https://repo.maven.apache.org/maven2/org/jline/jline-reader/3.20.0/jline-reader-3.20.0.jar to /home/runner/.gradle/.tmp/gradle_download16085386778015582822bin
+Downloading https://repo.maven.apache.org/maven2/org/checkerframework/checker-qual/3.49.2/checker-qual-3.49.2.jar to /home/runner/.gradle/.tmp/gradle_download4701710237640798419bin
+Downloading https://repo.maven.apache.org/maven2/org/jline/jline-terminal/3.27.1/jline-terminal-3.27.1.jar to /home/runner/.gradle/.tmp/gradle_download5549788159297439032bin
+Downloading https://repo.maven.apache.org/maven2/org/jline/jline-native/3.27.1/jline-native-3.27.1.jar to /home/runner/.gradle/.tmp/gradle_download6889508178641818476bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-codec-base/4.2.7.Final/netty-codec-base-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download13222287806467897589bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport/4.2.7.Final/netty-transport-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download15305762292065974928bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-buffer/4.2.7.Final/netty-buffer-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download10612429666461055318bin
+Downloading https://repo.maven.apache.org/maven2/org/ow2/asm/asm-tree/9.9.1/asm-tree-9.9.1.jar to /home/runner/.gradle/.tmp/gradle_download15727461884050179716bin
+Downloading https://repo.maven.apache.org/maven2/org/ow2/asm/asm/9.9.1/asm-9.9.1.jar to /home/runner/.gradle/.tmp/gradle_download13907150613144619413bin
+Downloading https://repo.maven.apache.org/maven2/com/google/errorprone/error_prone_annotations/2.41.0/error_prone_annotations-2.41.0.jar to /home/runner/.gradle/.tmp/gradle_download3022202177094149997bin
+Downloading https://repo.maven.apache.org/maven2/net/neoforged/installertools/cli-utils/2.1.4/cli-utils-2.1.4.jar to /home/runner/.gradle/.tmp/gradle_download10479185863313491918bin
+Downloading https://repo.maven.apache.org/maven2/at/yawk/lz4/lz4-java/1.8.1/lz4-java-1.8.1.jar to /home/runner/.gradle/.tmp/gradle_download3964899092661695749bin
+Downloading https://repo.maven.apache.org/maven2/com/azure/azure-json/1.4.0/azure-json-1.4.0.jar to /home/runner/.gradle/.tmp/gradle_download17405241577666964795bin
+Downloading https://repo.maven.apache.org/maven2/com/github/oshi/oshi-core/6.9.0/oshi-core-6.9.0.jar to /home/runner/.gradle/.tmp/gradle_download11612671900563093888bin
+Downloading https://repo.maven.apache.org/maven2/com/google/guava/failureaccess/1.0.3/failureaccess-1.0.3.jar to /home/runner/.gradle/.tmp/gradle_download11561628891231903253bin
+Downloading https://repo.papermc.io/repository/maven-public/com/mojang/authlib/7.0.61/authlib-7.0.61.jar to /home/runner/.gradle/.tmp/gradle_download8568913836370321832bin
+Downloading https://repo.papermc.io/repository/maven-public/com/mojang/datafixerupper/9.0.19/datafixerupper-9.0.19.jar to /home/runner/.gradle/.tmp/gradle_download6938828754078725296bin
+Downloading https://repo.maven.apache.org/maven2/com/microsoft/azure/msal4j/1.23.1/msal4j-1.23.1.jar to /home/runner/.gradle/.tmp/gradle_download874378003227220378bin
+Downloading https://repo.papermc.io/repository/maven-public/com/mojang/jtracy/1.0.37/jtracy-1.0.37.jar to /home/runner/.gradle/.tmp/gradle_download16649340883410685541bin
+Downloading https://repo.papermc.io/repository/maven-public/com/mojang/logging/1.6.11/logging-1.6.11.jar to /home/runner/.gradle/.tmp/gradle_download6053616941968643415bin
+Downloading https://repo.maven.apache.org/maven2/commons-io/commons-io/2.20.0/commons-io-2.20.0.jar to /home/runner/.gradle/.tmp/gradle_download6269810877029416021bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-codec-compression/4.2.7.Final/netty-codec-compression-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download6732801939116380833bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-codec-http/4.2.7.Final/netty-codec-http-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download9200430877539112603bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-resolver/4.2.7.Final/netty-resolver-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download9482400919165752577bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-common/4.2.7.Final/netty-common-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download1362104292781728139bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-handler/4.2.7.Final/netty-handler-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download2805467706268771792bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-classes-epoll/4.2.7.Final/netty-transport-classes-epoll-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download122093910421567339bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-epoll/4.2.7.Final/netty-transport-native-epoll-4.2.7.Final-linux-x86_64.jar to /home/runner/.gradle/.tmp/gradle_download6237401021016225214bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-classes-kqueue/4.2.7.Final/netty-transport-classes-kqueue-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download16988582457042750974bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-kqueue/4.2.7.Final/netty-transport-native-kqueue-4.2.7.Final-osx-x86_64.jar to /home/runner/.gradle/.tmp/gradle_download11817671923529573409bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-epoll/4.2.7.Final/netty-transport-native-epoll-4.2.7.Final-linux-aarch_64.jar to /home/runner/.gradle/.tmp/gradle_download11881717379935324551bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-kqueue/4.2.7.Final/netty-transport-native-kqueue-4.2.7.Final-osx-aarch_64.jar to /home/runner/.gradle/.tmp/gradle_download5760196389711393303bin
+Downloading https://repo.maven.apache.org/maven2/io/netty/netty-transport-native-unix-common/4.2.7.Final/netty-transport-native-unix-common-4.2.7.Final.jar to /home/runner/.gradle/.tmp/gradle_download8290875471710923374bin
+Downloading https://repo.maven.apache.org/maven2/net/java/dev/jna/jna/5.17.0/jna-5.17.0.jar to /home/runner/.gradle/.tmp/gradle_download11088300390332409141bin
+Downloading https://repo.maven.apache.org/maven2/net/sf/jopt-simple/jopt-simple/5.0.4/jopt-simple-5.0.4.jar to /home/runner/.gradle/.tmp/gradle_download16919380789063234560bin
+Downloading https://repo.maven.apache.org/maven2/net/java/dev/jna/jna-platform/5.17.0/jna-platform-5.17.0.jar to /home/runner/.gradle/.tmp/gradle_download14076365351657923222bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-model-builder/3.9.6/maven-model-builder-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download11476549570950115385bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/commons/commons-lang3/3.19.0/commons-lang3-3.19.0.jar to /home/runner/.gradle/.tmp/gradle_download17535450461465388665bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-artifact/3.9.6/maven-artifact-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download8028170312629558737bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/logging/log4j/log4j-slf4j2-impl/2.25.2/log4j-slf4j2-impl-2.25.2.jar to /home/runner/.gradle/.tmp/gradle_download7047987778007361164bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/examination-string/1.3.0/examination-string-1.3.0.jar to /home/runner/.gradle/.tmp/gradle_download10419885240656495431bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/examination-api/1.3.0/examination-api-1.3.0.jar to /home/runner/.gradle/.tmp/gradle_download4105886520952028812bin
+Downloading https://repo.maven.apache.org/maven2/org/jetbrains/annotations/26.0.2-1/annotations-26.0.2-1.jar to /home/runner/.gradle/.tmp/gradle_download13105541651815643679bin
+Downloading https://repo.maven.apache.org/maven2/net/kyori/ansi/1.1.1/ansi-1.1.1.jar to /home/runner/.gradle/.tmp/gradle_download4982133458919569525bin
+Downloading https://repo.maven.apache.org/maven2/com/github/spotbugs/spotbugs-annotations/4.8.6/spotbugs-annotations-4.8.6.jar to /home/runner/.gradle/.tmp/gradle_download8197560440573843263bin
+Downloading https://repo.maven.apache.org/maven2/com/google/code/findbugs/jsr305/3.0.2/jsr305-3.0.2.jar to /home/runner/.gradle/.tmp/gradle_download12913258228883227575bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-model/3.9.6/maven-model-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download1490358666367525057bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-repository-metadata/3.9.6/maven-repository-metadata-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download11232043998895120bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-spi/1.9.18/maven-resolver-spi-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download1716601928290476769bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-api/1.9.18/maven-resolver-api-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download9362888374790005774bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/resolver/maven-resolver-util/1.9.18/maven-resolver-util-1.9.18.jar to /home/runner/.gradle/.tmp/gradle_download13979772934005586991bin
+Downloading https://repo.maven.apache.org/maven2/javax/inject/javax.inject/1/javax.inject-1.jar to /home/runner/.gradle/.tmp/gradle_download1207891490891103531bin
+Downloading https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-utils/3.5.1/plexus-utils-3.5.1.jar to /home/runner/.gradle/.tmp/gradle_download17331537753351609185bin
+Downloading https://repo.maven.apache.org/maven2/io/leangen/geantyref/geantyref/1.3.16/geantyref-1.3.16.jar to /home/runner/.gradle/.tmp/gradle_download13833430522618097077bin
+Downloading https://repo.maven.apache.org/maven2/com/google/guava/listenablefuture/9999.0-empty-to-avoid-conflict-with-guava/listenablefuture-9999.0-empty-to-avoid-conflict-with-guava.jar to /home/runner/.gradle/.tmp/gradle_download6586215711471727063bin
+Downloading https://repo.maven.apache.org/maven2/com/google/j2objc/j2objc-annotations/3.1/j2objc-annotations-3.1.jar to /home/runner/.gradle/.tmp/gradle_download2201526731295979558bin
+Downloading https://repo.maven.apache.org/maven2/biz/aQute/bnd/biz.aQute.bnd.annotation/7.1.0/biz.aQute.bnd.annotation-7.1.0.jar to /home/runner/.gradle/.tmp/gradle_download14929090454378563123bin
+Downloading https://repo.maven.apache.org/maven2/org/osgi/org.osgi.annotation.bundle/2.0.0/org.osgi.annotation.bundle-2.0.0.jar to /home/runner/.gradle/.tmp/gradle_download10796036734448881246bin
+Downloading https://repo.maven.apache.org/maven2/org/osgi/org.osgi.annotation.versioning/1.1.2/org.osgi.annotation.versioning-1.1.2.jar to /home/runner/.gradle/.tmp/gradle_download17863136161367142763bin
+Downloading https://repo.maven.apache.org/maven2/org/codehaus/plexus/plexus-interpolation/1.26/plexus-interpolation-1.26.jar to /home/runner/.gradle/.tmp/gradle_download10291928110113552160bin
+Downloading https://repo.maven.apache.org/maven2/com/google/auto/service/auto-service-annotations/1.1.1/auto-service-annotations-1.1.1.jar to /home/runner/.gradle/.tmp/gradle_download4875854354994293028bin
+Downloading https://repo.maven.apache.org/maven2/org/apache/maven/maven-builder-support/3.9.6/maven-builder-support-3.9.6.jar to /home/runner/.gradle/.tmp/gradle_download12755319344791623564bin
+Downloading https://repo.maven.apache.org/maven2/org/eclipse/sisu/org.eclipse.sisu.inject/0.9.0.M2/org.eclipse.sisu.inject-0.9.0.M2.jar to /home/runner/.gradle/.tmp/gradle_download14536426046431495479bin
+Downloading https://repo.maven.apache.org/maven2/org/osgi/org.osgi.resource/1.0.0/org.osgi.resource-1.0.0.jar to /home/runner/.gradle/.tmp/gradle_download1083234297989825554bin
+Downloading https://repo.maven.apache.org/maven2/org/osgi/org.osgi.service.serviceloader/1.0.0/org.osgi.service.serviceloader-1.0.0.jar to /home/runner/.gradle/.tmp/gradle_download14019086898225683845bin
 Caching disabled for task ':compileJava' because:
   Build cache is disabled
 Task ':compileJava' is not up-to-date because:
@@ -268,19 +268,19 @@ Compilation mode: in-process compilation
 Full recompilation is required because no incremental change information is available. This is usually caused by clean builds or changing compiler arguments.
 Compiling with toolchain '/usr/lib/jvm/temurin-21-jdk-amd64'.
 Compiling with JDK Java compiler API.
-/home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java:233: error: cannot find symbol
-        lines.add("§6TruePlayer 区块调试：§e" + fakePlayer.getGameProfile().getName());
-                                                                      ^
-  symbol:   method getName()
-  location: class GameProfile
+/home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java:62: error: cannot find symbol
+                    UUID.nameUUIDFromBytes(("TruePlayer:" + name).getBytes(StandardCharsets.UTF_8)),
+                    ^
+  symbol:   variable UUID
+  location: class FakePlayerManager
 Note: /home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java uses or overrides a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
 1 error
 
 > Task :compileJava FAILED
-gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1779970703803.json
-paperweight-userdev: Acquired cache maintenance lock in 2ms
-paperweight-userdev: Finished cache maintenance in 5ms
+gradle/actions: Writing build results to /home/runner/work/_temp/.gradle-actions/build-results/__run-1779976264387.json
+paperweight-userdev: Acquired cache maintenance lock in 4ms
+paperweight-userdev: Finished cache maintenance in 7ms
 
 [Incubating] Problems report is available at: file:///home/runner/work/TruePlayer/TruePlayer/build/reports/problems/problems-report.html
 
@@ -291,11 +291,11 @@ Execution failed for task ':compileJava'.
 > Compilation failed; see the compiler output below.
   Note: /home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java uses or overrides a deprecated API.
   Note: Recompile with -Xlint:deprecation for details.
-  /home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java:233: error: cannot find symbol
-          lines.add("§6TruePlayer 区块调试：§e" + fakePlayer.getGameProfile().getName());
-                                                                        ^
-    symbol:   method getName()
-    location: class GameProfile
+  /home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java:62: error: cannot find symbol
+                      UUID.nameUUIDFromBytes(("TruePlayer:" + name).getBytes(StandardCharsets.UTF_8)),
+                      ^
+    symbol:   variable UUID
+    location: class FakePlayerManager
   1 error
 
 * Try:
@@ -368,11 +368,11 @@ org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':compile
 Caused by: org.gradle.api.internal.tasks.compile.CompilationFailedException: Compilation failed; see the compiler output below.
 Note: /home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java uses or overrides a deprecated API.
 Note: Recompile with -Xlint:deprecation for details.
-/home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java:233: error: cannot find symbol
-        lines.add("§6TruePlayer 区块调试：§e" + fakePlayer.getGameProfile().getName());
-                                                                      ^
-  symbol:   method getName()
-  location: class GameProfile
+/home/runner/work/TruePlayer/TruePlayer/src/main/java/me/yourname/trueplayer/fake/FakePlayerManager.java:62: error: cannot find symbol
+                    UUID.nameUUIDFromBytes(("TruePlayer:" + name).getBytes(StandardCharsets.UTF_8)),
+                    ^
+  symbol:   variable UUID
+  location: class FakePlayerManager
 1 error
 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:89)
 	at org.gradle.api.internal.tasks.compile.JdkJavaCompiler.execute(JdkJavaCompiler.java:50)
@@ -555,5 +555,5 @@ Note: Recompile with -Xlint:deprecation for details.
 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
 
 
-BUILD FAILED in 25s
+BUILD FAILED in 23s
 2 actionable tasks: 2 executed
