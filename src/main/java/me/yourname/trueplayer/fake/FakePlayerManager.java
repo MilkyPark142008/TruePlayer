@@ -3,6 +3,7 @@ package me.yourname.trueplayer.fake;
 import com.mojang.authlib.GameProfile;
 import me.yourname.trueplayer.TruePlayerPlugin;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
@@ -10,13 +11,20 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.network.CommonListenerCookie;
 import net.minecraft.server.network.ServerGamePacketListenerImpl;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntitySelector;
+import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.craftbukkit.CraftWorld;
-import org.bukkit.craftbukkit.entity.CraftEntity;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.inventory.ClickType;
@@ -24,7 +32,6 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerItemHeldEvent;
-import org.bukkit.util.RayTraceResult;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
@@ -197,27 +204,83 @@ public final class FakePlayerManager implements Listener {
         ServerPlayer fakePlayer = getFakePlayer(name);
         if (fakePlayer == null) return false;
 
-        org.bukkit.entity.Player bukkitPlayer = fakePlayer.getBukkitEntity();
-        RayTraceResult result = bukkitPlayer.getWorld().rayTraceEntities(
-                bukkitPlayer.getEyeLocation(),
-                bukkitPlayer.getEyeLocation().getDirection(),
-                4.5,
-                entity -> !entity.getUniqueId().equals(bukkitPlayer.getUniqueId())
-        );
-        if (result == null || result.getHitEntity() == null) return false;
+        HitResult hitResult = pick(fakePlayer, 4.5D, true);
+        swingHand(fakePlayer, InteractionHand.MAIN_HAND);
+        if (!(hitResult instanceof EntityHitResult entityHitResult)) return false;
 
-        Entity target = ((CraftEntity) result.getHitEntity()).getHandle();
+        Entity target = entityHitResult.getEntity();
+        if (target == fakePlayer || !target.isAttackable()) return false;
         fakePlayer.attack(target);
-        fakePlayer.swing(InteractionHand.MAIN_HAND);
         return true;
     }
 
     public boolean use(String name) {
         ServerPlayer fakePlayer = getFakePlayer(name);
         if (fakePlayer == null) return false;
-        // 基础版先只做挥手动作；完整右键方块/实体后续需要模拟 ServerboundUseItem/UseItemOn 逻辑。
-        fakePlayer.swing(InteractionHand.MAIN_HAND);
-        return true;
+
+        InteractionHand hand = InteractionHand.MAIN_HAND;
+        HitResult hitResult = pick(fakePlayer, 5.0D, true);
+        InteractionResult result = InteractionResult.PASS;
+
+        if (hitResult instanceof EntityHitResult entityHitResult) {
+            Entity target = entityHitResult.getEntity();
+            if (target != fakePlayer) {
+                result = fakePlayer.interactOn(target, hand);
+            }
+        }
+
+        if (!result.consumesAction() && hitResult instanceof BlockHitResult blockHitResult
+                && hitResult.getType() == HitResult.Type.BLOCK) {
+            net.minecraft.world.item.ItemStack itemStack = fakePlayer.getItemInHand(hand);
+            result = fakePlayer.gameMode.useItemOn(fakePlayer, fakePlayer.level(), itemStack, hand, blockHitResult);
+        }
+
+        if (!result.consumesAction()) {
+            net.minecraft.world.item.ItemStack itemStack = fakePlayer.getItemInHand(hand);
+            result = fakePlayer.gameMode.useItem(fakePlayer, fakePlayer.level(), itemStack, hand);
+        }
+
+        swingHand(fakePlayer, hand);
+        return result.consumesAction();
+    }
+
+    private void swingHand(ServerPlayer fakePlayer, InteractionHand hand) {
+        fakePlayer.swing(hand);
+        int animation = hand == InteractionHand.OFF_HAND
+                ? ClientboundAnimatePacket.SWING_OFF_HAND
+                : ClientboundAnimatePacket.SWING_MAIN_HAND;
+        fakePlayer.level().getChunkSource().sendToTrackingPlayers(
+                fakePlayer,
+                new ClientboundAnimatePacket(fakePlayer, animation)
+        );
+    }
+
+    private HitResult pick(ServerPlayer fakePlayer, double reach, boolean includeEntities) {
+        HitResult blockHitResult = fakePlayer.pick(reach, 0.0F, false);
+        if (!includeEntities) return blockHitResult;
+
+        Vec3 eyePosition = fakePlayer.getEyePosition();
+        Vec3 viewVector = fakePlayer.getViewVector(0.0F);
+        Vec3 endPosition = eyePosition.add(viewVector.x * reach, viewVector.y * reach, viewVector.z * reach);
+        AABB searchBox = fakePlayer.getBoundingBox().expandTowards(viewVector.scale(reach)).inflate(1.0D);
+        double maxDistanceSqr = reach * reach;
+        if (blockHitResult.getType() != HitResult.Type.MISS) {
+            maxDistanceSqr = eyePosition.distanceToSqr(blockHitResult.getLocation());
+        }
+
+        EntityHitResult entityHitResult = ProjectileUtil.getEntityHitResult(
+                fakePlayer.level(),
+                fakePlayer,
+                eyePosition,
+                endPosition,
+                searchBox,
+                EntitySelector.CAN_BE_PICKED.and(entity -> entity != fakePlayer),
+                0.0F
+        );
+        if (entityHitResult == null) return blockHitResult;
+
+        double entityDistanceSqr = eyePosition.distanceToSqr(entityHitResult.getLocation());
+        return entityDistanceSqr <= maxDistanceSqr ? entityHitResult : blockHitResult;
     }
 
     public boolean selectHotbarSlot(String name, int slot) {
