@@ -218,30 +218,40 @@ public final class FakePlayerManager implements Listener {
         ServerPlayer fakePlayer = getFakePlayer(name);
         if (fakePlayer == null) return false;
 
-        InteractionHand hand = InteractionHand.MAIN_HAND;
         HitResult hitResult = pick(fakePlayer, 5.0D, true);
-        InteractionResult result = InteractionResult.PASS;
+        InteractionResult mainHandResult = use(fakePlayer, InteractionHand.MAIN_HAND, hitResult);
+        if (mainHandResult.consumesAction()) {
+            swingHand(fakePlayer, InteractionHand.MAIN_HAND);
+            return true;
+        }
 
+        InteractionResult offHandResult = use(fakePlayer, InteractionHand.OFF_HAND, hitResult);
+        if (offHandResult.consumesAction()) {
+            swingHand(fakePlayer, InteractionHand.OFF_HAND);
+            return true;
+        }
+
+        swingHand(fakePlayer, InteractionHand.MAIN_HAND);
+        return false;
+    }
+
+    private InteractionResult use(ServerPlayer fakePlayer, InteractionHand hand, HitResult hitResult) {
         if (hitResult instanceof EntityHitResult entityHitResult) {
             Entity target = entityHitResult.getEntity();
             if (target != fakePlayer) {
-                result = fakePlayer.interactOn(target, hand);
+                InteractionResult result = fakePlayer.interactOn(target, hand);
+                if (result.consumesAction()) return result;
             }
         }
 
-        if (!result.consumesAction() && hitResult instanceof BlockHitResult blockHitResult
-                && hitResult.getType() == HitResult.Type.BLOCK) {
+        if (hitResult instanceof BlockHitResult blockHitResult && hitResult.getType() == HitResult.Type.BLOCK) {
             net.minecraft.world.item.ItemStack itemStack = fakePlayer.getItemInHand(hand);
-            result = fakePlayer.gameMode.useItemOn(fakePlayer, fakePlayer.level(), itemStack, hand, blockHitResult);
+            InteractionResult result = fakePlayer.gameMode.useItemOn(fakePlayer, fakePlayer.level(), itemStack, hand, blockHitResult);
+            if (result.consumesAction()) return result;
         }
 
-        if (!result.consumesAction()) {
-            net.minecraft.world.item.ItemStack itemStack = fakePlayer.getItemInHand(hand);
-            result = fakePlayer.gameMode.useItem(fakePlayer, fakePlayer.level(), itemStack, hand);
-        }
-
-        swingHand(fakePlayer, hand);
-        return result.consumesAction();
+        net.minecraft.world.item.ItemStack itemStack = fakePlayer.getItemInHand(hand);
+        return fakePlayer.gameMode.useItem(fakePlayer, fakePlayer.level(), itemStack, hand);
     }
 
     private void swingHand(ServerPlayer fakePlayer, InteractionHand hand) {
