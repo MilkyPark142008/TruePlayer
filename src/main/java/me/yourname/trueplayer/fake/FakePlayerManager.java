@@ -7,8 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundAnimatePacket;
 import net.minecraft.network.protocol.game.ClientboundSetEquipmentPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemOnPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ClientInformation;
 import net.minecraft.server.level.ServerLevel;
@@ -246,28 +244,38 @@ public final class FakePlayerManager implements Listener {
     }
 
     private boolean use(ServerPlayer fakePlayer, InteractionHand hand, HitResult hitResult) {
+        syncInventoryAndHandItems(fakePlayer);
+
         if (hitResult instanceof EntityHitResult entityHitResult) {
             Entity target = entityHitResult.getEntity();
             if (target != fakePlayer) {
                 InteractionResult result = fakePlayer.interactOn(target, hand);
                 if (result.consumesAction()) {
                     swingHand(fakePlayer, hand);
+                    syncInventoryAndHandItems(fakePlayer);
                     return true;
                 }
             }
         }
 
+        net.minecraft.world.item.ItemStack itemStack = fakePlayer.getItemInHand(hand);
         if (hitResult instanceof BlockHitResult blockHitResult && hitResult.getType() == HitResult.Type.BLOCK) {
-            fakePlayer.connection.handleUseItemOn(new ServerboundUseItemOnPacket(hand, blockHitResult, 0));
-            swingHand(fakePlayer, hand);
-            return true;
+            InteractionResult result = fakePlayer.gameMode.useItemOn(fakePlayer, fakePlayer.level(), itemStack, hand, blockHitResult);
+            if (result.consumesAction()) {
+                swingHand(fakePlayer, hand);
+                syncInventoryAndHandItems(fakePlayer);
+                return true;
+            }
         }
 
-        net.minecraft.world.item.ItemStack itemStack = fakePlayer.getItemInHand(hand);
+        itemStack = fakePlayer.getItemInHand(hand);
         if (!itemStack.isEmpty()) {
-            fakePlayer.connection.handleUseItem(new ServerboundUseItemPacket(hand, 0, fakePlayer.getYRot(), fakePlayer.getXRot()));
-            swingHand(fakePlayer, hand);
-            return true;
+            InteractionResult result = fakePlayer.gameMode.useItem(fakePlayer, fakePlayer.level(), itemStack, hand);
+            if (result.consumesAction()) {
+                swingHand(fakePlayer, hand);
+                syncInventoryAndHandItems(fakePlayer);
+                return true;
+            }
         }
         return false;
     }
@@ -291,6 +299,26 @@ public final class FakePlayerManager implements Listener {
                         Pair.of(EquipmentSlot.OFFHAND, fakePlayer.getItemBySlot(EquipmentSlot.OFFHAND).copy())
                 ))
         );
+    }
+
+    private void syncInventoryAndHandItems(ServerPlayer fakePlayer) {
+        int selectedSlot = fakePlayer.getBukkitEntity().getInventory().getHeldItemSlot();
+        if (selectedSlot < 0 || selectedSlot > 8) {
+            selectedSlot = fakePlayer.getInventory().getSelectedSlot();
+        }
+        fakePlayer.getInventory().setSelectedSlot(selectedSlot);
+        fakePlayer.getBukkitEntity().getInventory().setHeldItemSlot(selectedSlot);
+        fakePlayer.containerMenu.broadcastChanges();
+        fakePlayer.inventoryMenu.broadcastChanges();
+        broadcastHandItems(fakePlayer);
+    }
+
+    private void scheduleInventoryHandRefresh(ServerPlayer fakePlayer) {
+        Bukkit.getScheduler().runTask(plugin, () -> {
+            if (fakePlayers.containsValue(fakePlayer)) {
+                syncInventoryAndHandItems(fakePlayer);
+            }
+        });
     }
 
     private HitResult pick(ServerPlayer fakePlayer, double reach, boolean includeEntities) {
@@ -327,7 +355,7 @@ public final class FakePlayerManager implements Listener {
         fakePlayer.connection.handleSetCarriedItem(new ServerboundSetCarriedItemPacket(slot));
         fakePlayer.getInventory().setSelectedSlot(slot);
         fakePlayer.getBukkitEntity().getInventory().setHeldItemSlot(slot);
-        broadcastHandItems(fakePlayer);
+        syncInventoryAndHandItems(fakePlayer);
         return true;
     }
 
@@ -339,7 +367,7 @@ public final class FakePlayerManager implements Listener {
         ItemStack offHand = inventory.getItemInOffHand();
         inventory.setItemInMainHand(offHand);
         inventory.setItemInOffHand(mainHand);
-        broadcastHandItems(fakePlayer);
+        syncInventoryAndHandItems(fakePlayer);
         return true;
     }
 
@@ -394,11 +422,10 @@ public final class FakePlayerManager implements Listener {
         ServerPlayer fakePlayer = getFakePlayer(name);
         if (fakePlayer == null || viewer == null) return false;
         String key = name.toLowerCase(Locale.ROOT);
+        syncInventoryAndHandItems(fakePlayer);
         viewer.openInventory(fakePlayer.getBukkitEntity().getInventory());
         inventoryViewers.put(viewer.getUniqueId(), key);
-        viewer.sendMessage("§7提示：假人背包界面中 §e最下面一行 1-9 就是快捷栏§7；当前选中的快捷栏会通过聊天提示显示。");
-        viewer.sendMessage("§7操作：鼠标滚轮/数字键 1-9 选择假人快捷栏，按 F 交换假人主手/副手。");
-        viewer.sendMessage(getSelectedHotbarMessage(fakePlayer));
+        viewer.sendMessage(getSelectedHotbarMessage(fakePlayer) + " §8| §7最顶上一排为快捷栏；鼠标滚轮/数字键 1-9 选择，按 F 交换主副手。");
         return true;
     }
 
@@ -453,6 +480,12 @@ public final class FakePlayerManager implements Listener {
                 viewer.updateInventory();
                 viewer.sendMessage("§a已交换假人主手和副手物品。");
             }
+            return;
+        }
+
+        ServerPlayer fakePlayer = getFakePlayer(fakeName);
+        if (fakePlayer != null) {
+            scheduleInventoryHandRefresh(fakePlayer);
         }
     }
 
@@ -474,7 +507,7 @@ public final class FakePlayerManager implements Listener {
         int slot = fakePlayer.getInventory().getSelectedSlot();
         org.bukkit.inventory.ItemStack item = fakePlayer.getBukkitEntity().getInventory().getItem(slot);
         String itemName = formatItem(item);
-        return "§a当前假人快捷栏：§e第 " + (slot + 1) + " 格 §7(" + itemName + ") §8| 背包界面最下面一行是快捷栏";
+        return "§a当前假人快捷栏：§e第 " + (slot + 1) + " 格 §7(" + itemName + ") §8| 背包界面最顶上一排是快捷栏";
     }
 
     public List<String> getChunkInfo(String name) {
