@@ -30,6 +30,7 @@ import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.craftbukkit.CraftWorld;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -43,7 +44,10 @@ import org.bukkit.event.player.PlayerTeleportEvent.TeleportCause;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.LinkedHashMap;
@@ -96,6 +100,8 @@ public final class FakePlayerManager implements Listener {
 
             server.getPlayerList().placeNewPlayer(connection, fakePlayer, cookie);
             applyDefaultGameMode(fakePlayer);
+            loadInventory(name, fakePlayer);
+            syncInventoryAndHandItems(fakePlayer);
 
             fakePlayers.put(key, fakePlayer);
             fakePlayerNamesByUuid.put(fakePlayer.getUUID(), key);
@@ -149,6 +155,7 @@ public final class FakePlayerManager implements Listener {
         if (fakePlayer == null) return false;
 
         try {
+            saveInventory(name, fakePlayer);
             cancelRepeatingActions(name);
             String key = name.toLowerCase(Locale.ROOT);
             fakePlayers.remove(key);
@@ -224,6 +231,8 @@ public final class FakePlayerManager implements Listener {
         Entity target = entityHitResult.getEntity();
         if (target == fakePlayer || !target.isAttackable()) return false;
         fakePlayer.attack(target);
+        syncInventoryAndHandItems(fakePlayer);
+        saveInventory(name, fakePlayer);
         return true;
     }
 
@@ -236,6 +245,7 @@ public final class FakePlayerManager implements Listener {
         for (InteractionHand hand : InteractionHand.values()) {
             if (use(fakePlayer, hand, hitResult)) {
                 syncInventoryAndHandItems(fakePlayer);
+                saveInventory(name, fakePlayer);
                 return true;
             }
         }
@@ -260,6 +270,10 @@ public final class FakePlayerManager implements Listener {
                     if (success.swingSource() == InteractionResult.SwingSource.SERVER) {
                         swingHand(fakePlayer, hand);
                     }
+                    return true;
+                }
+                if (result.consumesAction()) {
+                    swingHand(fakePlayer, hand);
                     return true;
                 }
             }
@@ -321,12 +335,68 @@ public final class FakePlayerManager implements Listener {
         broadcastHandItems(fakePlayer);
     }
 
-    private void scheduleInventoryHandRefresh(ServerPlayer fakePlayer) {
+    private void scheduleInventorySave(String name, ServerPlayer fakePlayer) {
         Bukkit.getScheduler().runTask(plugin, () -> {
             if (fakePlayers.containsValue(fakePlayer)) {
                 syncInventoryAndHandItems(fakePlayer);
+                saveInventory(name, fakePlayer);
             }
         });
+    }
+
+    private void loadInventory(String name, ServerPlayer fakePlayer) {
+        File file = inventoryFile(name);
+        if (!file.isFile()) return;
+
+        YamlConfiguration config = YamlConfiguration.loadConfiguration(file);
+        PlayerInventory inventory = fakePlayer.getBukkitEntity().getInventory();
+        List<?> storage = config.getList("storage");
+        if (storage != null) {
+            inventory.setStorageContents(storage.stream()
+                    .map(item -> item instanceof ItemStack itemStack ? itemStack : null)
+                    .toArray(ItemStack[]::new));
+        }
+        List<?> armor = config.getList("armor");
+        if (armor != null) {
+            inventory.setArmorContents(armor.stream()
+                    .map(item -> item instanceof ItemStack itemStack ? itemStack : null)
+                    .toArray(ItemStack[]::new));
+        }
+        ItemStack offhand = config.getItemStack("offhand");
+        if (offhand != null) {
+            inventory.setItemInOffHand(offhand);
+        }
+        int heldSlot = config.getInt("held-slot", inventory.getHeldItemSlot());
+        if (heldSlot >= 0 && heldSlot <= 8) {
+            inventory.setHeldItemSlot(heldSlot);
+            fakePlayer.getInventory().setSelectedSlot(heldSlot);
+        }
+    }
+
+    private void saveInventory(String name, ServerPlayer fakePlayer) {
+        File file = inventoryFile(name);
+        File parent = file.getParentFile();
+        if (!parent.isDirectory() && !parent.mkdirs()) {
+            plugin.getLogger().warning("Failed to create fake player inventory directory: " + parent);
+            return;
+        }
+
+        PlayerInventory inventory = fakePlayer.getBukkitEntity().getInventory();
+        YamlConfiguration config = new YamlConfiguration();
+        config.set("storage", Arrays.asList(inventory.getStorageContents()));
+        config.set("armor", Arrays.asList(inventory.getArmorContents()));
+        config.set("offhand", inventory.getItemInOffHand());
+        config.set("held-slot", inventory.getHeldItemSlot());
+        try {
+            config.save(file);
+        } catch (IOException exception) {
+            plugin.getLogger().warning("Failed to save fake player inventory for " + name + ": " + exception.getMessage());
+        }
+    }
+
+    private File inventoryFile(String name) {
+        String key = name == null ? "unknown" : name.toLowerCase(Locale.ROOT).replaceAll("[^a-z0-9_]", "_");
+        return new File(new File(plugin.getDataFolder(), "fake-player-inventories"), key + ".yml");
     }
 
     private HitResult pick(ServerPlayer fakePlayer, double reach, boolean includeEntities) {
@@ -370,6 +440,7 @@ public final class FakePlayerManager implements Listener {
         fakePlayer.getInventory().setSelectedSlot(slot);
         fakePlayer.getBukkitEntity().getInventory().setHeldItemSlot(slot);
         syncInventoryAndHandItems(fakePlayer);
+        saveInventory(name, fakePlayer);
         return true;
     }
 
@@ -382,6 +453,7 @@ public final class FakePlayerManager implements Listener {
         inventory.setItemInMainHand(offHand);
         inventory.setItemInOffHand(mainHand);
         syncInventoryAndHandItems(fakePlayer);
+        saveInventory(name, fakePlayer);
         return true;
     }
 
@@ -471,7 +543,12 @@ public final class FakePlayerManager implements Listener {
 
     @EventHandler
     public void onInventoryClose(InventoryCloseEvent event) {
-        inventoryViewers.remove(event.getPlayer().getUniqueId());
+        String fakeName = inventoryViewers.remove(event.getPlayer().getUniqueId());
+        if (fakeName == null) return;
+        ServerPlayer fakePlayer = getFakePlayer(fakeName);
+        if (fakePlayer != null) {
+            scheduleInventorySave(fakeName, fakePlayer);
+        }
     }
 
     @EventHandler
@@ -516,7 +593,7 @@ public final class FakePlayerManager implements Listener {
 
         ServerPlayer fakePlayer = getFakePlayer(fakeName);
         if (fakePlayer != null) {
-            scheduleInventoryHandRefresh(fakePlayer);
+            scheduleInventorySave(fakeName, fakePlayer);
         }
     }
 

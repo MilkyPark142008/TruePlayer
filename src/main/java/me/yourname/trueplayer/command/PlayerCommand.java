@@ -99,7 +99,7 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
                 return;
             }
             boolean success = useAction ? manager.use(fakeName) : manager.attack(fakeName);
-            sender.sendMessage(success ? "§a假人 §e" + fakeName + " §a已执行一次" + actionName + "。" : "§c执行失败，假人视线内没有可作用目标：§e" + fakeName);
+            sender.sendMessage(success ? "§a假人 §e" + fakeName + " §a已执行一次" + actionName + "。" : "§c执行失败，假人视线内没有可交互目标，或该交互被服务端判定为无效：§e" + fakeName);
             return;
         }
         if (args.length != 3) {
