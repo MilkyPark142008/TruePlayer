@@ -267,9 +267,11 @@ public final class FakePlayerManager implements Listener {
             fakePlayer.resetLastActionTime();
             Entity target = entityHitResult.getEntity();
             if (target != fakePlayer) {
-                Vec3 relativeHitPosition = entityHitResult.getLocation().subtract(target.getX(), target.getY(), target.getZ());
-                if (target.interact(fakePlayer, hand, relativeHitPosition).consumesAction()
-                        || fakePlayer.interactOn(target, hand, relativeHitPosition).consumesAction()) {
+                // Paper/Mojang 1.21.11 exposes the entity interaction overloads without a hit-position Vec3.
+                // Keep Carpet's ordering: let the target handle direct interaction first,
+                // then fall back to the player's interactOn path.
+                if (target.interact(fakePlayer, hand).consumesAction()
+                        || fakePlayer.interactOn(target, hand).consumesAction()) {
                     return true;
                 }
             }
