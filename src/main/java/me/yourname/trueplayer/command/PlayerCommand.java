@@ -56,6 +56,10 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(manager.removeFakePlayer(fakeName) ? "§a已移除假人：§e" + fakeName : "§c找不到假人：§e" + fakeName);
                 return true;
             }
+            case "stop" -> {
+                sender.sendMessage(manager.stopActions(fakeName) ? "§a已停止假人 §e" + fakeName + " §a当前所有持续行为。" : "§c找不到假人：§e" + fakeName);
+                return true;
+            }
             case "chunkinfo" -> {
                 for (String line : manager.getChunkInfo(fakeName)) {
                     sender.sendMessage(line);
@@ -90,8 +94,12 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
     private void handleAction(CommandSender sender, String fakeName, String[] args, boolean useAction) {
         String actionName = useAction ? "右键" : "左键";
         if (args.length == 2) {
+            if (!manager.hasFakePlayer(fakeName)) {
+                sender.sendMessage("§c找不到假人：§e" + fakeName);
+                return;
+            }
             boolean success = useAction ? manager.use(fakeName) : manager.attack(fakeName);
-            sender.sendMessage(success ? "§a假人 §e" + fakeName + " §a已执行一次" + actionName + "。" : "§c执行失败，找不到假人或没有可作用目标：§e" + fakeName);
+            sender.sendMessage(success ? "§a假人 §e" + fakeName + " §a已执行一次" + actionName + "。" : "§c执行失败，假人视线内没有可作用目标：§e" + fakeName);
             return;
         }
         if (args.length != 3) {
@@ -117,6 +125,7 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         sender.sendMessage("§6TruePlayer 指令帮助：");
         sender.sendMessage("§e/player <name> spawn");
         sender.sendMessage("§e/player <name> kill");
+        sender.sendMessage("§e/player <name> stop §7- 停止该假人的所有持续行为");
         sender.sendMessage("§e/player <name> use [ticks] §7- 右键一次，或每 ticks 执行一次");
         sender.sendMessage("§e/player <name> attack [ticks] §7- 左键一次，或每 ticks 执行一次");
         sender.sendMessage("§e/player <name> inventory §7- 打开假人背包，也可潜行右键假人打开");
@@ -149,7 +158,7 @@ public final class PlayerCommand implements CommandExecutor, TabCompleter {
         if (args.length == 1) {
             result.addAll(manager.getFakePlayerNames());
         } else if (args.length == 2) {
-            result.addAll(List.of("spawn", "kill", "chunkinfo", "use", "attack", "inventory"));
+            result.addAll(List.of("spawn", "kill", "stop", "chunkinfo", "use", "attack", "inventory"));
         } else if (args.length == 3 && (args[1].equalsIgnoreCase("use") || args[1].equalsIgnoreCase("attack"))) {
             result.addAll(List.of("10", "20"));
         }

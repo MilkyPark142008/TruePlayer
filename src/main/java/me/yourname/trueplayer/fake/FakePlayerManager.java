@@ -393,6 +393,23 @@ public final class FakePlayerManager implements Listener {
         return startRepeatingAction(name, "attack", intervalTicks, () -> attack(name));
     }
 
+    public boolean stopActions(String name) {
+        ServerPlayer fakePlayer = getFakePlayer(name);
+        if (fakePlayer == null) return false;
+
+        cancelRepeatingActions(name);
+        fakePlayer.setShiftKeyDown(false);
+        fakePlayer.setSprinting(false);
+        fakePlayer.setJumping(false);
+        fakePlayer.setDeltaMovement(Vec3.ZERO);
+        fakePlayer.resetLastActionTime();
+        return true;
+    }
+
+    public boolean hasFakePlayer(String name) {
+        return getFakePlayer(name) != null;
+    }
+
     private boolean startRepeatingAction(String name, String action, long intervalTicks, Runnable runnable) {
         if (getFakePlayer(name) == null || intervalTicks <= 0) return false;
         String taskKey = repeatingActionKey(name, action);
