@@ -59,8 +59,16 @@ jobs:
           git commit -m "Update CI build log [skip ci]" || exit 0
           git push
 
+      - name: Prepare plugin jar
+        shell: bash
+        run: |
+          mkdir -p artifact
+          cp build/libs/*.jar artifact/
+          ls -lh artifact
+
       - name: Upload plugin jar
         uses: actions/upload-artifact@v4
         with:
-          name: TruePlayer
-          path: build/libs/*.jar
+          name: TruePlayer-jar
+          path: artifact/*.jar
+          if-no-files-found: error
