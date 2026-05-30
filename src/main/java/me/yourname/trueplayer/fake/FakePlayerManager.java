@@ -22,6 +22,7 @@ import net.minecraft.world.entity.EntitySelector;
 import net.minecraft.world.entity.projectile.ProjectileUtil;
 import net.minecraft.world.entity.Relative;
 import net.minecraft.world.level.GameType;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
@@ -230,50 +231,55 @@ public final class FakePlayerManager implements Listener {
         ServerPlayer fakePlayer = getFakePlayer(name);
         if (fakePlayer == null) return false;
 
-        HitResult hitResult = pick(fakePlayer, 5.0D, true);
-        boolean used = false;
-        if (use(fakePlayer, InteractionHand.MAIN_HAND, hitResult)) {
-            used = true;
-        } else if (use(fakePlayer, InteractionHand.OFF_HAND, hitResult)) {
-            used = true;
-        } else {
-            swingHand(fakePlayer, InteractionHand.MAIN_HAND);
+        syncInventoryAndHandItems(fakePlayer);
+        HitResult hitResult = pick(fakePlayer, fakePlayer.gameMode.isCreative() ? 5.0D : 4.5D, true);
+        for (InteractionHand hand : InteractionHand.values()) {
+            if (use(fakePlayer, hand, hitResult)) {
+                syncInventoryAndHandItems(fakePlayer);
+                return true;
+            }
         }
+        swingHand(fakePlayer, InteractionHand.MAIN_HAND);
         broadcastHandItems(fakePlayer);
-        return used;
+        return false;
     }
 
     private boolean use(ServerPlayer fakePlayer, InteractionHand hand, HitResult hitResult) {
-        syncInventoryAndHandItems(fakePlayer);
-
-        if (hitResult instanceof EntityHitResult entityHitResult) {
+        if (hitResult instanceof BlockHitResult blockHitResult && hitResult.getType() == HitResult.Type.BLOCK) {
+            fakePlayer.resetLastActionTime();
+            if (blockHitResult.getBlockPos().getY() < fakePlayer.level().getMaxY()
+                    && fakePlayer.level().mayInteract(fakePlayer, blockHitResult.getBlockPos())) {
+                InteractionResult result = fakePlayer.gameMode.useItemOn(
+                        fakePlayer,
+                        fakePlayer.level(),
+                        fakePlayer.getItemInHand(hand),
+                        hand,
+                        blockHitResult
+                );
+                if (result instanceof InteractionResult.Success success) {
+                    if (success.swingSource() == InteractionResult.SwingSource.SERVER) {
+                        swingHand(fakePlayer, hand);
+                    }
+                    return true;
+                }
+            }
+        } else if (hitResult instanceof EntityHitResult entityHitResult) {
+            fakePlayer.resetLastActionTime();
             Entity target = entityHitResult.getEntity();
             if (target != fakePlayer) {
-                InteractionResult result = fakePlayer.interactOn(target, hand);
-                if (result.consumesAction()) {
-                    swingHand(fakePlayer, hand);
-                    syncInventoryAndHandItems(fakePlayer);
+                Vec3 relativeHitPosition = entityHitResult.getLocation().subtract(target.getX(), target.getY(), target.getZ());
+                if (target.interact(fakePlayer, hand, relativeHitPosition).consumesAction()
+                        || fakePlayer.interactOn(target, hand, relativeHitPosition).consumesAction()) {
                     return true;
                 }
             }
         }
 
         net.minecraft.world.item.ItemStack itemStack = fakePlayer.getItemInHand(hand);
-        if (hitResult instanceof BlockHitResult blockHitResult && hitResult.getType() == HitResult.Type.BLOCK) {
-            InteractionResult result = fakePlayer.gameMode.useItemOn(fakePlayer, fakePlayer.level(), itemStack, hand, blockHitResult);
-            if (result.consumesAction()) {
-                swingHand(fakePlayer, hand);
-                syncInventoryAndHandItems(fakePlayer);
-                return true;
-            }
-        }
-
-        itemStack = fakePlayer.getItemInHand(hand);
         if (!itemStack.isEmpty()) {
             InteractionResult result = fakePlayer.gameMode.useItem(fakePlayer, fakePlayer.level(), itemStack, hand);
             if (result.consumesAction()) {
                 swingHand(fakePlayer, hand);
-                syncInventoryAndHandItems(fakePlayer);
                 return true;
             }
         }
@@ -322,12 +328,18 @@ public final class FakePlayerManager implements Listener {
     }
 
     private HitResult pick(ServerPlayer fakePlayer, double reach, boolean includeEntities) {
-        HitResult blockHitResult = fakePlayer.pick(reach, 0.0F, false);
+        Vec3 eyePosition = fakePlayer.getEyePosition(1.0F);
+        Vec3 viewVector = fakePlayer.getViewVector(1.0F);
+        Vec3 endPosition = eyePosition.add(viewVector.x * reach, viewVector.y * reach, viewVector.z * reach);
+        HitResult blockHitResult = fakePlayer.level().clip(new ClipContext(
+                eyePosition,
+                endPosition,
+                ClipContext.Block.OUTLINE,
+                ClipContext.Fluid.NONE,
+                fakePlayer
+        ));
         if (!includeEntities) return blockHitResult;
 
-        Vec3 eyePosition = fakePlayer.getEyePosition();
-        Vec3 viewVector = fakePlayer.getViewVector(0.0F);
-        Vec3 endPosition = eyePosition.add(viewVector.x * reach, viewVector.y * reach, viewVector.z * reach);
         AABB searchBox = fakePlayer.getBoundingBox().expandTowards(viewVector.scale(reach)).inflate(1.0D);
         double maxDistanceSqr = reach * reach;
         if (blockHitResult.getType() != HitResult.Type.MISS) {
